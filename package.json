@@ -1,5 +1,5 @@
 {
-  "name": "ephemeral-postgres",
+  "name": "drizzle-orm-sveltekit-playground",
   "version": "0.0.1",
   "private": true,
   "scripts": {
