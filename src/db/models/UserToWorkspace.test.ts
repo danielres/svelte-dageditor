@@ -1,8 +1,8 @@
-import { beforeEach, describe, it } from 'vitest'
-import { User, UserToWorkspace, Workspace } from '../models'
+import { beforeEach, describe, it, expect } from 'vitest'
+import { User, UserToWorkspace, Workspace, truncate } from '../models'
 
 beforeEach(async () => {
-  await Promise.all([User.truncate(), Workspace.truncate()])
+  await truncate()
 })
 
 describe('usersToWorkspaces', () => {
@@ -14,17 +14,35 @@ describe('usersToWorkspaces', () => {
     const workspace2 = await Workspace.insert({ name: 'workspace2' })
     const workspace3 = await Workspace.insert({ name: 'workspace3' })
 
-    await UserToWorkspace.insert({ userId: tom.id, workspaceId: workspace1.id })
-    await UserToWorkspace.insert({ userId: tom.id, workspaceId: workspace2.id })
-    await UserToWorkspace.insert({ userId: jane.id, workspaceId: workspace1.id })
+    const tom_w1 = await UserToWorkspace.insert({ userId: tom.id, workspaceId: workspace1.id })
+    const tom_w2 = await UserToWorkspace.insert({ userId: tom.id, workspaceId: workspace2.id })
+    const jane_w1 = await UserToWorkspace.insert({ userId: jane.id, workspaceId: workspace1.id })
 
     const userWithWorkspaces = await User.findUserWithWorkspacesById(tom.id)
-    console.log(JSON.stringify({ userWithWorkspaces }, null, 2))
+    expect(userWithWorkspaces).toEqual({
+      ...tom,
+      workspaces: [
+        { ...workspace1, meta: { joinedAt: tom_w1.createdAt } },
+        { ...workspace2, meta: { joinedAt: tom_w2.createdAt } },
+      ],
+    })
 
     const workspaceWithUsers = await Workspace.findWorkspaceWithUsersById(workspace1.id)
-    console.log(JSON.stringify({ workspaceWithUsers }, null, 2))
+    expect(workspaceWithUsers).toEqual({
+      id: workspaceWithUsers.id,
+      createdAt: workspaceWithUsers.createdAt,
+      updateAt: null,
+      name: 'workspace1',
+      users: [
+        { ...tom, meta: { joinedAt: tom_w1.createdAt } },
+        { ...jane, meta: { joinedAt: jane_w1.createdAt } },
+      ],
+    })
 
     const workspacesByUserId = await Workspace.findWorkspacesByUserId(tom.id)
-    console.log(JSON.stringify({ workspacesByUserId }, null, 2))
+    expect(workspacesByUserId).toEqual([
+      { ...workspace1, meta: { joinedAt: tom_w1.createdAt } },
+      { ...workspace2, meta: { joinedAt: tom_w2.createdAt } },
+    ])
   })
 })

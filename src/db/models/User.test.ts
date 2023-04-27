@@ -1,9 +1,10 @@
 import * as string from '$lib/utils/string'
 import { beforeEach, describe, expect, it } from 'vitest'
+import { truncate } from '../models'
 import * as User from './User'
 
 beforeEach(async () => {
-  await User.truncate()
+  await truncate()
 })
 
 describe('User.insert()', () => {
