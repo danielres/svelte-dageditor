@@ -1,4 +1,4 @@
-import type { Logger } from 'drizzle-orm'
+import { sql, type Logger } from 'drizzle-orm'
 
 import { muted, warn } from '$lib/utils/console'
 import { dedent, removeBlankLines } from '$lib/utils/string'
@@ -10,8 +10,8 @@ import { createDatabase } from './createDatabase'
 
 class MyLogger implements Logger {
   logQuery(query: string, params: unknown[]): void {
-    console.log(''.padEnd(80, '-'))
     console.log(removeBlankLines(dedent(query)))
+    console.log(''.padEnd(80, '-'))
     if (params.length > 0) params.map((p, i) => muted(`$${i + 1}: ${p}`))
   }
 }
@@ -23,6 +23,9 @@ warn('PG_URL: ' + PG_URL)
 async function run() {
   const pool = new Pool({ connectionString: PG_URL, keepAlive: false, max: 1 })
   const migrationsClient = drizzle(pool, { logger: new MyLogger() })
+
+  warn('Adding extension uuid-ossp...')
+  await migrationsClient.execute(sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`)
 
   warn('Migrating database...')
   const start = Date.now()
