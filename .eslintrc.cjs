@@ -12,6 +12,7 @@ module.exports = {
     sourceType: 'module',
     ecmaVersion: 2020,
   },
+  options: [{ ignoreRestSiblings: true }],
   env: {
     browser: true,
     es2017: true,
