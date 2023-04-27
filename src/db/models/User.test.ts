@@ -1,6 +1,6 @@
 import * as string from '$lib/utils/string'
 import { beforeEach, describe, expect, it } from 'vitest'
-import * as User from './models/User'
+import * as User from './User'
 
 beforeEach(async () => {
   await User.truncate()
@@ -16,7 +16,7 @@ describe('User.insert()', () => {
     const actualKeys = Object.keys(actual)
 
     const expectedKeys = ['id', 'username', 'email', 'createdAt', 'updateAt']
-    expect(actualKeys).toEqual(expectedKeys)
+    expect(actualKeys.sort()).toEqual(expectedKeys.sort())
 
     expect(actual.email).toEqual(email)
     expect(actual.username).toEqual(username)

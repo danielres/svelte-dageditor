@@ -9,17 +9,15 @@
     "test": "playwright test",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-    "test:unit": "PG_URL=$(pg_tmp) vitest",
+    "test:unit": "ENV=test dotenv vitest",
     "lint": "prettier --plugin-search-dir . --check . && eslint .",
     "format": "prettier --plugin-search-dir . --write .",
+    "db:reset": "src/db/bin/reset.sh",
+    "db:start": "pg_ctl -D data start ",
+    "db:stop": "pg_ctl -D data stop",
     "db:migration:generate": "drizzle-kit generate:pg",
     "db:migration:generate:custom": "pnpm db:migration:generate --custom",
-    "db:migration:drop": "drizzle-kit drop",
-    "db:migration:run": "vite-node ./src/db/bin/migrate.ts",
-    "db:dev:init": "mkdir -p data && initdb -D data && createuser -s postgres",
-    "db:dev:start": "pg_ctl -D data start",
-    "db:dev:prepare": "psql -d postgres -c 'CREATE DATABASE development;'",
-    "db:dev:stop": "pg_ctl -D data stop"
+    "db:migration:run": "dotenv vite-node ./src/db/bin/migrate.ts"
   },
   "devDependencies": {
     "@playwright/test": "^1.32.3",
