@@ -5,5 +5,6 @@ export default defineConfig({
   plugins: [sveltekit()],
   test: {
     include: ['src/**/*.{test,spec}.{js,ts}'],
+    setupFiles: ['./vitest/add-crypto-polyfill.js', './vitest/setup-teardown.js'],
   },
 })

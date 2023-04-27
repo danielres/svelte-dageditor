@@ -1,9 +1,5 @@
-import { beforeEach, describe, it, expect } from 'vitest'
-import { User, UserToWorkspace, Workspace, truncate } from '../models'
-
-beforeEach(async () => {
-  await truncate()
-})
+import { describe, expect, it } from 'vitest'
+import { User, UserToWorkspace, Workspace } from '../models'
 
 describe('usersToWorkspaces', () => {
   it('test...', async () => {
