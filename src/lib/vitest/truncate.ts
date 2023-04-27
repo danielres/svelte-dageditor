@@ -1,5 +1,5 @@
-import { truncate } from '../src/db/models'
 import { beforeEach } from 'vitest'
+import { truncate } from '../../db/models'
 
 beforeEach(async () => {
   await truncate()

@@ -1,12 +1,15 @@
-import { afterAll, beforeAll } from 'vitest'
+import { afterAll, beforeAll, beforeEach } from 'vitest'
+import { truncate } from '../../db/models'
 
 beforeAll(() => {
   global.crypto = {
+    // @ts-ignore
     randomUUID: randomUUIDPolyfill,
   }
 })
 
 afterAll(() => {
+  // @ts-ignore
   delete global.crypto
 })
 
@@ -18,3 +21,7 @@ function randomUUIDPolyfill() {
 
   return `${w()}${w()}-${w()}-4d0b-${w()}-${w()}${w()}${w()}`
 }
+
+beforeEach(async () => {
+  await truncate()
+})
