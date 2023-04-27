@@ -1,18 +1,6 @@
-import { dev } from '$app/environment'
-import { eq, sql } from 'drizzle-orm'
-import { warn } from '../../lib/utils/console'
+import { eq } from 'drizzle-orm'
 import db from '../db'
 import { users, usersToWorkspaces, workspaces } from '../schema'
-
-export async function count() {
-  const [result] = await db.select({ count: sql`COUNT(*)` }).from(workspaces)
-  return result.count
-}
-
-export async function truncate() {
-  if (!dev) return warn('truncate() is only allowed in dev (and test)')
-  return await db.delete(workspaces).returning({ id: workspaces.id }).execute()
-}
 
 export async function insert(values: { id?: string; name: string }) {
   return await db
