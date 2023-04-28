@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "fb4a9a4e-1671-4173-af60-32fde1c5323a",
+  "id": "63cda83c-a443-4673-8e74-1d1cd394cfe6",
   "prevId": "f632357c-cfc8-4c49-9687-cb7826b18233",
   "tables": {
     "tags": {
@@ -44,7 +44,7 @@
           "name": "workspace_id",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "created_by": {
           "name": "created_by",
@@ -60,10 +60,11 @@
         }
       },
       "indexes": {
-        "name_idx": {
-          "name": "name_idx",
+        "name_workspace_id_idx": {
+          "name": "name_workspace_id_idx",
           "columns": [
-            "name"
+            "name",
+            "workspace_id"
           ],
           "isUnique": true
         }
@@ -79,7 +80,7 @@
           "columnsTo": [
             "uuid"
           ],
-          "onDelete": "set null",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         },
         "tags_created_by_users_uuid_fk": {

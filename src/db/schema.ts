@@ -55,11 +55,15 @@ export const tags = pgTable(
     ...record,
     name: text('name').notNull(),
     description: text('description'),
-    workspaceId: text('workspace_id').references(() => workspaces.id, { onDelete: 'set null' }),
+    workspaceId: text('workspace_id')
+      .notNull()
+      .references(() => workspaces.id, { onDelete: 'cascade' }),
     createdBy: text('created_by').references(() => users.id, { onDelete: 'set null' }),
     updatedBy: text('updated_by').references(() => users.id, { onDelete: 'set null' }),
   },
-  (tags) => ({ nameIdx: uniqueIndex('name_idx').on(tags.name) })
+  (tags) => ({
+    nameWorkspaceIdx: uniqueIndex('name_workspace_id_idx').on(tags.name, tags.workspaceId),
+  })
 )
 
 export const tagsToTags = pgTable(

@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS "tags" (
 	"updated_at" timestamp,
 	"name" text NOT NULL,
 	"description" text,
-	"workspace_id" text,
+	"workspace_id" text NOT NULL,
 	"created_by" text,
 	"updated_by" text
 );
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS "tagsToTags" (
 );
 
 DO $$ BEGIN
- ALTER TABLE "tags" ADD CONSTRAINT "tags_workspace_id_workspaces_uuid_fk" FOREIGN KEY ("workspace_id") REFERENCES "workspaces"("uuid") ON DELETE set null ON UPDATE no action;
+ ALTER TABLE "tags" ADD CONSTRAINT "tags_workspace_id_workspaces_uuid_fk" FOREIGN KEY ("workspace_id") REFERENCES "workspaces"("uuid") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -47,5 +47,5 @@ EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 
-CREATE UNIQUE INDEX IF NOT EXISTS "name_idx" ON "tags" ("name");
+CREATE UNIQUE INDEX IF NOT EXISTS "name_workspace_id_idx" ON "tags" ("name","workspace_id");
 CREATE UNIQUE INDEX IF NOT EXISTS "parent_id_idx" ON "tagsToTags" ("parent_id","child_id");
