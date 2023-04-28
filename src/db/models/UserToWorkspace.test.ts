@@ -1,14 +1,14 @@
 import { describe, expect, it } from 'vitest'
 import { User, UserToWorkspace, Workspace } from '../models'
 
-describe('usersToWorkspaces', () => {
+describe('UserToWorkspace', () => {
   it('test...', async () => {
     const tom = await User.insert({ username: 'tom', email: 'tom@tom.com', password: '123' })
     const jane = await User.insert({ username: 'jane', email: 'jane@jane.com', password: '123' })
 
     const workspace1 = await Workspace.insert({ name: 'workspace1' })
     const workspace2 = await Workspace.insert({ name: 'workspace2' })
-    const workspace3 = await Workspace.insert({ name: 'workspace3' })
+    await Workspace.insert({ name: 'workspace3' })
 
     const tom_w1 = await UserToWorkspace.insert({ userId: tom.id, workspaceId: workspace1.id })
     const tom_w2 = await UserToWorkspace.insert({ userId: tom.id, workspaceId: workspace2.id })
