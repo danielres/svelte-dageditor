@@ -1,11 +1,12 @@
 import { dev } from '$app/environment'
 import { sql } from 'drizzle-orm'
 import db from './db'
-import { users } from './schema'
 
+export * as Tag from './models/Tag'
+export * as TagToTag from './models/TagToTag'
 export * as User from './models/User'
-export * as Workspace from './models/Workspace'
 export * as UserToWorkspace from './models/UserToWorkspace'
+export * as Workspace from './models/Workspace'
 
 export async function truncateAll() {
   if (!dev) throw new Error('truncateAll() should only be called in dev mode')
