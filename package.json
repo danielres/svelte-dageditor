@@ -9,7 +9,7 @@
     "test": "playwright test",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-    "test:unit": "ENV=test dotenv vitest",
+    "test:unit": "ENV=test dotenv vitest -- --threads=false",
     "lint": "prettier --plugin-search-dir . --check . && eslint .",
     "format": "prettier --plugin-search-dir . --write .",
     "db:reset": "src/db/bin/reset.sh",
