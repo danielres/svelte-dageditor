@@ -1,60 +1,75 @@
 import { sql } from 'drizzle-orm'
-import * as d from 'drizzle-orm/pg-core'
+import { pgTable, text, timestamp, uniqueIndex } from 'drizzle-orm/pg-core'
 
 const timestamps = {
-  createdAt: d.timestamp('created_at').defaultNow(),
-  updateAt: d.timestamp('updated_at'),
+  createdAt: timestamp('created_at').defaultNow(),
+  updateAt: timestamp('updated_at'),
 }
 
 const id = {
-  id: d
-    .text('uuid')
+  id: text('uuid')
     .primaryKey()
     .default(sql`uuid_generate_v4()`),
 }
 
-const record = {
-  ...id,
-  ...timestamps,
-}
+const record = { ...id, ...timestamps }
 
-export const users = d.pgTable(
+export const users = pgTable(
   'users',
   {
     ...record,
-    username: d.text('username').notNull(),
-    email: d.text('email').notNull(),
-    password: d.text('password').notNull(),
+    username: text('username').notNull(),
+    email: text('email').notNull(),
+    password: text('password').notNull(),
   },
-  (users) => {
-    return {
-      usernameIdx: d.uniqueIndex('username_idx').on(users.username),
-      emailIdx: d.uniqueIndex('email_idx').on(users.email),
-    }
-  }
+  (users) => ({
+    usernameIdx: uniqueIndex('username_idx').on(users.username),
+    emailIdx: uniqueIndex('email_idx').on(users.email),
+  })
 )
 
-export const workspaces = d.pgTable(
+export const workspaces = pgTable(
   'workspaces',
   {
     ...record,
-    name: d.text('name').notNull(),
+    name: text('name').notNull(),
   },
-  (workspaces) => {
-    return {
-      nameIdx: d.uniqueIndex('name_idx').on(workspaces.name),
-    }
-  }
+  (workspaces) => ({
+    nameIdx: uniqueIndex('name_idx').on(workspaces.name),
+  })
 )
 
-export const usersToWorkspaces = d.pgTable('usersToWorkspaces', {
+export const usersToWorkspaces = pgTable('usersToWorkspaces', {
   ...record,
-  userId: d
-    .text('user_id')
+  userId: text('user_id')
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
-  workspaceId: d
-    .text('workspace_id')
+  workspaceId: text('workspace_id')
     .notNull()
     .references(() => workspaces.id, { onDelete: 'cascade' }),
 })
+
+export const tags = pgTable(
+  'tags',
+  {
+    ...record,
+    name: text('name').notNull(),
+    description: text('description'),
+    workspaceId: text('workspace_id').references(() => workspaces.id, { onDelete: 'set null' }),
+    createdBy: text('created_by').references(() => users.id, { onDelete: 'set null' }),
+    updatedBy: text('updated_by').references(() => users.id, { onDelete: 'set null' }),
+  },
+  (tags) => ({ nameIdx: uniqueIndex('name_idx').on(tags.name) })
+)
+
+export const tagsToTags = pgTable(
+  'tagsToTags',
+  {
+    ...record,
+    parentId: text('parent_id').references(() => tags.id, { onDelete: 'cascade' }),
+    childId: text('child_id').references(() => tags.id, { onDelete: 'cascade' }),
+  },
+  (tagsToTags) => ({
+    parentChildIdx: uniqueIndex('parent_id_idx').on(tagsToTags.parentId, tagsToTags.childId),
+  })
+)
