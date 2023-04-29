@@ -19,9 +19,15 @@ export async function findByName(name: string) {
 
 export async function findAllByWorkspaceId(workspaceId: string) {
   const { workspaceId: _, ...rest } = tags
+
   return await db
-    .select({ tags: rest })
+    .select({ tags: rest, parentId: tagsToTags.parentId })
     .from(tags)
+    .leftJoin(tagsToTags, eq(tagsToTags.childId, tags.id))
     .where(eq(tags.workspaceId, workspaceId))
-    .then((res) => res.map((r) => r.tags))
+    .then((res) =>
+      res.map(({ tags, parentId }) => {
+        return { ...tags, parentId }
+      })
+    )
 }
