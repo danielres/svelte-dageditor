@@ -10,6 +10,15 @@ export async function insert(values: { id?: string; name: string }) {
     .then((res) => res[0])
 }
 
+export async function findByName(name: string) {
+  return await db
+    .select()
+    .from(workspaces)
+    .where(eq(workspaces.name, name))
+    .execute()
+    .then((res) => res[0])
+}
+
 export async function findWorkspaceWithUsersById(id: string, options = {} as const) {
   const { password, ...rest } = users
   const _options = { password: false, ...options } as const
