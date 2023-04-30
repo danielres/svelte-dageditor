@@ -25,6 +25,7 @@ export async function findAllByWorkspaceId(workspaceId: string) {
     .from(tags)
     .leftJoin(tagsToTags, eq(tagsToTags.childId, tags.id))
     .where(eq(tags.workspaceId, workspaceId))
+    .orderBy(tags.name)
     .then((res) =>
       res.map(({ tags, parentId }) => {
         return { ...tags, parentId }
