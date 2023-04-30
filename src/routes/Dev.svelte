@@ -3,6 +3,10 @@
 </script>
 
 <div class="dev">
+  <form action="?/reset-data" method="post">
+    <button>Reset data</button>
+  </form>
+
   <pre>
     {JSON.stringify($opsStore, null, 2)}
   </pre>
