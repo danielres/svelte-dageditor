@@ -1,6 +1,9 @@
 lockfileVersion: '6.0'
 
 dependencies:
+  db-errors:
+    specifier: ^0.2.3
+    version: 0.2.3
   drizzle-orm:
     specifier: ^0.24.5
     version: 0.24.5(@types/pg@8.6.6)(pg@8.10.0)
@@ -850,6 +853,10 @@ packages:
       es5-ext: 0.10.62
       type: 1.2.0
     dev: true
+
+  /db-errors@0.2.3:
+    resolution: {integrity: sha512-OOgqgDuCavHXjYSJoV2yGhv6SeG8nk42aoCSoyXLZUH7VwFG27rxbavU1z+VrZbZjphw5UkDQwUlD21MwZpUng==}
+    dev: false
 
   /debug@4.3.4:
     resolution: {integrity: sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ==}

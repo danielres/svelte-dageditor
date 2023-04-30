@@ -44,6 +44,7 @@
   },
   "type": "module",
   "dependencies": {
+    "db-errors": "^0.2.3",
     "drizzle-orm": "^0.24.5",
     "pg": "^8.10.0",
     "sortablejs": "^1.15.0"
