@@ -2,7 +2,7 @@ import { eq } from 'drizzle-orm'
 import db from '../db'
 import { tags, tagsToTags } from '../schema'
 
-export async function insert(values: { name: string; workspaceId: string }) {
+export async function insert(values: { name: string; workspaceId: string; id?: string }) {
   const result = await db
     .insert(tags)
     .values(values)
