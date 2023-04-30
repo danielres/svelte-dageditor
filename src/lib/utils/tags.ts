@@ -30,21 +30,21 @@ export function getSiblings(tags: Tag[], tagId: string) {
   return tags.filter((t) => t.parentId === tag.parentId && t.id !== tagId)
 }
 
-// export function getAllowedChildren(tags: Tag[], tag: Tag): Tag[] {
-//   const allowedChildren: Tag[] = []
-//   const ancestors = getAncestors(tags, tag.id)
-//   const ancestorIds = new Set(ancestors.map((ancestor) => ancestor.id))
+export function getAllowedPotentialChildren(tags: Tag[], tag: Tag): Tag[] {
+  const allowedChildren: Tag[] = []
+  const ancestors = getAncestors(tags, tag.id)
+  const ancestorIds = new Set(ancestors.map((ancestor) => ancestor.id))
 
-//   for (const potentialChild of tags) {
-//     // Exclude the tag itself, its ancestors, and its current children
-//     if (
-//       potentialChild.id !== tag.id &&
-//       !ancestorIds.has(potentialChild.id) &&
-//       potentialChild.parentId !== tag.id
-//     ) {
-//       allowedChildren.push(potentialChild)
-//     }
-//   }
+  for (const potentialChild of tags) {
+    // Exclude the tag itself, its ancestors, and its current children
+    if (
+      potentialChild.id !== tag.id &&
+      !ancestorIds.has(potentialChild.id) &&
+      potentialChild.parentId !== tag.id
+    ) {
+      allowedChildren.push(potentialChild)
+    }
+  }
 
-//   return allowedChildren
-// }
+  return allowedChildren
+}

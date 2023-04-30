@@ -6,7 +6,7 @@ import {
   getAncestors,
   getParents,
   getSiblings,
-  // getAllowedChildren,
+  getAllowedPotentialChildren,
 } from './tags'
 
 const root = { id: '<root>', parentId: null, name: 'root' }
@@ -14,26 +14,23 @@ const t1 = { id: 't1', parentId: '<root>', name: 't1' }
 const t11 = { id: 't11', parentId: 't1', name: 't11' }
 const t111 = { id: 't111', parentId: 't11', name: 't111' }
 const t2 = { id: 't2', parentId: '<root>', name: 't2' }
-const tx1 = { id: 'tx1', parentId: 'tx', name: 'tx1' }
 const txa = { id: 'tx', parentId: 't1', name: 'tx' }
 const txb = { id: 'tx', parentId: 't2', name: 'tx' }
+const tx1 = { id: 'tx1', parentId: 'tx', name: 'tx1' }
 
 const tags = [root, t1, t2, t11, t111, txa, txb, tx1]
 
-// describe('getAllowedChildren()', () => {
-//   it('returns the allowed children of a tag', () => {
-//     {
-//       const actual = getAllowedChildren(tags, t11)
-//       const expected = [t2, txa, txb, tx1]
-//       expect(actual).toEqual(expected)
-//     }
-//     {
-//       const actual = getAllowedChildren(tags, root)
-//       const expected = [t11, t111, txa, txb, tx1]
-//       expect(actual).toEqual(expected)
-//     }
-//   })
-// })
+describe('getAllowedPotentialChildren()', () => {
+  it('returns the allowed children of a tag', () => {
+    const actual1 = getAllowedPotentialChildren(tags, t11)
+    const expected1 = [t2, txa, txb, tx1]
+    expect(actual1).toEqual(expected1)
+
+    const actual2 = getAllowedPotentialChildren(tags, root)
+    const expected2 = [t11, t111, txa, txb, tx1]
+    expect(actual2).toEqual(expected2)
+  })
+})
 
 describe('getSiblings()', () => {
   it('returns the siblings of a tag', () => {
