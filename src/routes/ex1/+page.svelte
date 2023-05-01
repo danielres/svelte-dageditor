@@ -4,6 +4,8 @@
   import { fade } from 'svelte/transition'
   import { accordion } from './accordion'
 
+  type Data = { basketIndex: number; itemIndex: number }
+
   let baskets = [
     { name: 'Basket 1', items: ['Orange', 'Pineapple'] },
     { name: 'Basket 2', items: ['Banana', 'Apple'] },
@@ -19,8 +21,6 @@
     const data: Data = { basketIndex, itemIndex }
     event.dataTransfer?.setData('text/plain', JSON.stringify(data))
   }
-
-  type Data = { basketIndex: number; itemIndex: number }
 
   function drop(
     event: DragEvent & { currentTarget: EventTarget & HTMLUListElement },

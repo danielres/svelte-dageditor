@@ -10,7 +10,8 @@
     </ul>
 
     <ul>
-      <li><a href="/ex1">Example</a></li>
+      <li><a href="/ex1">Example1</a></li>
+      <li><a href="/ex2">Example2 (minimal)</a></li>
     </ul>
   </nav>
 
