@@ -1,0 +1,11 @@
+<script lang="ts">
+  import Dev from './Dev.svelte'
+</script>
+
+<div class="grid grid-cols-2">
+  <div class="p-8">
+    <slot />
+  </div>
+
+  <Dev />
+</div>
