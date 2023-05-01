@@ -1,5 +1,5 @@
 <script>
-  import { opsStore, opsStoreOptimized } from './$tagTree'
+  import { allTags, opsStore, opsStoreOptimized, opsStoreAllowed } from './$tagTree'
 </script>
 
 <div class="dev">
@@ -7,12 +7,30 @@
     <button>Reset data</button>
   </form>
 
+  <code>All operations</code>
   <pre>
     {JSON.stringify($opsStore, null, 2)}
   </pre>
+
   <hr />
+
+  <code>Allowed operations</code>
+  <pre>
+    {JSON.stringify($opsStoreAllowed, null, 2)}
+  </pre>
+
+  <hr />
+
+  <code>Optimized</code>
   <pre>
     {JSON.stringify($opsStoreOptimized, null, 2)}
+  </pre>
+
+  <hr />
+
+  <code>All tags</code>
+  <pre>
+    {JSON.stringify($allTags, null, 2)}
   </pre>
 </div>
 
