@@ -8,6 +8,10 @@
       <li><a href="/v1">v1</a></li>
       <li><a href="/v2">v2</a></li>
     </ul>
+
+    <ul>
+      <li><a href="/ex1">Example</a></li>
+    </ul>
   </nav>
 
   <main>
@@ -20,9 +24,9 @@
     @apply text-slate-600;
   }
   nav {
-    @apply bg-slate-300 px-4;
+    @apply bg-slate-300 px-4 flex justify-between;
     ul {
-      @apply flex w-full;
+      @apply flex;
       li {
         a {
           @apply py-2 px-4 block font-bold;
