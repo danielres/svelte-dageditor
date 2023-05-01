@@ -7,5 +7,7 @@
     <slot />
   </div>
 
-  <Dev />
+  <div>
+    <Dev />
+  </div>
 </div>
