@@ -2,15 +2,18 @@ import { isTruthy, onlyUnique } from './array'
 
 export type Tag = { id: string; parentId: string | null; name: string }
 
+const MAX_RECURSION_DEPTH = 10
+
 export function getParents(tags: Tag[], tagId: string) {
   const tagInstances = tags.filter((tag) => tagId.includes(tag.id))
   const parentIds = tagInstances.map((t) => t.parentId).filter(isTruthy)
   return tags.filter((tag) => parentIds.includes(tag.id))
 }
 
-export function getAncestors(tags: Tag[], tagId: string): Tag[] {
+export function getAncestors(tags: Tag[], tagId: string, depth = 0): Tag[] {
   const parents = getParents(tags, tagId)
-  const ancestors = parents.flatMap((parent) => getAncestors(tags, parent.id))
+  if (depth > MAX_RECURSION_DEPTH) return parents
+  const ancestors = parents.flatMap((parent) => getAncestors(tags, parent.id, depth + 1))
   return [...parents, ...ancestors].filter(onlyUnique)
 }
 
