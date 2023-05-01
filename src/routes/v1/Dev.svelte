@@ -34,12 +34,8 @@
   </pre>
 </div>
 
-<style>
+<style lang="postcss">
   .dev {
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: 50%;
-    background: #ccc;
+    @apply absolute top-0 right-0 bottom-0 bg-emerald-100 p-8 overflow-auto w-1/2 text-emerald-800 text-xs;
   }
 </style>

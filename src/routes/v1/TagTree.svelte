@@ -80,7 +80,10 @@
   {/each}
 </ul>
 
-<style>
+<style lang="postcss">
+  ul {
+    @apply pl-8 border-l;
+  }
   :global(.sortable-chosen) {
     color: green;
   }
