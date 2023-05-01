@@ -1,4 +1,4 @@
-import { Tag, TagToTag, Workspace, truncateAll } from '../db/models'
+import { Tag, TagToTag, Workspace, truncateAll } from '../../db/models'
 
 export async function resetData() {
   await truncateAll()
