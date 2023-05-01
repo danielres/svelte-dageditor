@@ -15,6 +15,13 @@
       "when": 1682698815992,
       "tag": "0001_faithful_vampiro",
       "breakpoints": false
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1682958307126,
+      "tag": "0002_dry_titanium_man",
+      "breakpoints": false
     }
   ]
 }

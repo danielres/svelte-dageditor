@@ -70,8 +70,12 @@ export const tagsToTags = pgTable(
   'tagsToTags',
   {
     ...record,
-    parentId: text('parent_id').references(() => tags.id, { onDelete: 'cascade' }),
-    childId: text('child_id').references(() => tags.id, { onDelete: 'cascade' }),
+    parentId: text('parent_id')
+      .notNull()
+      .references(() => tags.id, { onDelete: 'cascade' }),
+    childId: text('child_id')
+      .notNull()
+      .references(() => tags.id, { onDelete: 'cascade' }),
   },
   (tagsToTags) => ({
     parentChildIdx: uniqueIndex('parent_id_idx').on(tagsToTags.parentId, tagsToTags.childId),

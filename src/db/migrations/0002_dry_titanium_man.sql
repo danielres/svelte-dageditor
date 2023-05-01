@@ -1,0 +1,2 @@
+ALTER TABLE "tagsToTags" ALTER COLUMN "parent_id" SET NOT NULL;
+ALTER TABLE "tagsToTags" ALTER COLUMN "child_id" SET NOT NULL;
