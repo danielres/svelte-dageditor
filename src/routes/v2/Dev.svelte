@@ -1,22 +1,56 @@
 <script lang="ts">
+  import { fade } from 'svelte/transition'
+  import {
+    allRelations,
+    allTags,
+    nextOperations,
+    prevOperations,
+    runOperation,
+    undoOperation,
+  } from './stores'
+
+  let key = 0
 </script>
 
 <div class="dev">
-  <form action="?/reset-data" method="post">
-    <button>Reset data</button>
-  </form>
+  <div class="flex gap-4">
+    <form action="?/reset-data" method="post" on:submit={() => (key = Math.random())}>
+      <button>Reset data</button>
+    </form>
 
-  <code>All operations</code>
-  <!-- <pre>
-    {JSON.stringify($opsStore, null, 2)}
-  </pre> -->
+    <button on:click={runOperation}>Run next operation</button>
+    <button on:click={undoOperation}>Undo last operation</button>
+  </div>
 
-  <hr />
+  <div class="flex gap-8">
+    <div>
+      <h3>All tags</h3>
+      {#key $allTags}
+        <pre in:fade>{JSON.stringify($allTags, null, 2)}</pre>
+      {/key}
+    </div>
 
-  <code>All tags</code>
-  <!-- <pre>
-    {JSON.stringify($allTags, null, 2)}
-  </pre> -->
+    <div>
+      <h3>All relations</h3>
+      {#key $allRelations}
+        <pre in:fade>{JSON.stringify($allRelations, null, 2)}</pre>
+      {/key}
+    </div>
+
+    <div>
+      <h3>Next operations</h3>
+      {#key $nextOperations}
+        <pre in:fade>{JSON.stringify($nextOperations, null, 2)}</pre>
+      {/key}
+    </div>
+
+    <div>
+      <h3>Prev operations</h3>
+      {#key $prevOperations}
+        <pre in:fade>{JSON.stringify($prevOperations, null, 2)}</pre>
+      {/key}
+    </div>
+  </div>
 </div>
 
 <style lang="postcss">
@@ -24,11 +58,10 @@
     @apply bg-emerald-200  px-4 py-2;
   }
   .dev {
-    @apply grid gap-4;
+    @apply grid gap-8;
     @apply bg-emerald-100 p-8 text-emerald-800 text-xs;
   }
-
-  hr {
-    @apply border border-emerald-800/20;
+  h3 {
+    @apply font-bold font-mono opacity-80 mb-2;
   }
 </style>
