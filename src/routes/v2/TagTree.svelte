@@ -17,9 +17,3 @@
 <div>
   <Recursion tags={$tagTree} parentId={rootId} />
 </div>
-
-<style lang="postcss">
-  div :global(ul) {
-    @apply px-6 py-1 border-l border-gray-200;
-  }
-</style>

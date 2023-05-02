@@ -43,3 +43,12 @@
     </li>
   {/each}
 </ul>
+
+<style lang="postcss">
+  li {
+    cursor: grab;
+  }
+  ul {
+    @apply px-6 py-1 border-l border-gray-200;
+  }
+</style>
