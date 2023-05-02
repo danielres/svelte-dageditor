@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Dev from './Dev.svelte'
+  import Dev from './TagTree/Dev.svelte'
 </script>
 
 <div class="grid grid-cols-2">

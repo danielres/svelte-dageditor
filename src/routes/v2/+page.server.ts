@@ -5,7 +5,7 @@ import { eq } from 'drizzle-orm'
 import db from '../../db/db'
 import { Workspace } from '../../db/models'
 import * as tables from '../../db/schema'
-import { resetData } from './resetData'
+import { resetData } from './resetData.server'
 
 export const load = (async () => {
   const ws = await Workspace.findByName('ws1')

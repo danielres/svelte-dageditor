@@ -1,8 +1,8 @@
 <script lang="ts">
   import { fade } from 'svelte/transition'
   import {
-    allRelations,
-    allTags,
+    relationsStore as relations,
+    tagsStore,
     nextOperations,
     prevOperations,
     runOperation,
@@ -25,15 +25,15 @@
   <div class="flex gap-8">
     <div>
       <h3>All tags</h3>
-      {#key $allTags}
-        <pre in:fade>{JSON.stringify($allTags, null, 2)}</pre>
+      {#key $tagsStore}
+        <pre in:fade>{JSON.stringify($tagsStore, null, 2)}</pre>
       {/key}
     </div>
 
     <div>
       <h3>All relations</h3>
-      {#key $allRelations}
-        <pre in:fade>{JSON.stringify($allRelations, null, 2)}</pre>
+      {#key $relations}
+        <pre in:fade>{JSON.stringify($relations, null, 2)}</pre>
       {/key}
     </div>
 

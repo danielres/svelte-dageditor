@@ -12,6 +12,7 @@ export function getNestedDescendants(
     .filter(isTruthy)
     .map((child) => ({
       ...child,
+      parentId: id,
       children: getNestedDescendants(allRelations, allTags, child.id),
     }))
 }

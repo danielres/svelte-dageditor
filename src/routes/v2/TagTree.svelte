@@ -1,24 +1,17 @@
 <script lang="ts">
-  import type { NestedTag } from './types'
+  import type { Relation, Tag } from './TagTree/types'
 
-  import { flash } from './actions/flash'
+  import Recursion from './TagTree/Recursion.svelte'
+  import { relationsStore, tagsStore, makeTagTreeStore } from './TagTree/stores'
 
-  export let tags: NestedTag[]
+  export let tags: Tag[]
+  export let relations: Relation[]
+  export let rootId: string
+
+  $tagsStore = tags
+  $relationsStore = relations
+
+  const tagTree = makeTagTreeStore(rootId)
 </script>
 
-<ul use:flash>
-  {#each tags as tag (tag.name)}
-    <li>
-      {tag.name}
-      {#if tag.children.length}
-        <svelte:self tags={tag.children} />
-      {/if}
-    </li>
-  {/each}
-</ul>
-
-<style lang="postcss">
-  :global(ul ul) {
-    @apply px-6 py-1 border-l border-gray-200;
-  }
-</style>
+<Recursion tags={$tagTree} parentId={rootId} />
