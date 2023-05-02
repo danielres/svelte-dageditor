@@ -13,30 +13,18 @@
 </script>
 
 <div class="dev">
-  <div class="flex gap-4">
+  <div class="flex gap-4 justify-between">
+    <div class="flex">
+      <button on:click={undoOperation} disabled={!$prevOperations.length}>Undo</button>
+      <button on:click={runOperation} disabled={!$nextOperations.length}>Redo</button>
+    </div>
+
     <form action="?/reset-data" method="post" on:submit={() => (key = Math.random())}>
       <button>Reset data</button>
     </form>
-
-    <button on:click={runOperation}>Run next operation</button>
-    <button on:click={undoOperation}>Undo last operation</button>
   </div>
 
   <div class="flex gap-8">
-    <div>
-      <h3>All tags</h3>
-      {#key $tagsStore}
-        <pre in:fade>{JSON.stringify($tagsStore, null, 2)}</pre>
-      {/key}
-    </div>
-
-    <div>
-      <h3>All relations</h3>
-      {#key $relations}
-        <pre in:fade>{JSON.stringify($relations, null, 2)}</pre>
-      {/key}
-    </div>
-
     <div>
       <h3>Next operations</h3>
       {#key $nextOperations}
@@ -50,12 +38,29 @@
         <pre in:fade>{JSON.stringify($prevOperations, null, 2)}</pre>
       {/key}
     </div>
+
+    <div>
+      <h3>All tags</h3>
+      {#key $tagsStore}
+        <pre in:fade>{JSON.stringify($tagsStore, null, 2)}</pre>
+      {/key}
+    </div>
+
+    <div>
+      <h3>All relations</h3>
+      {#key $relations}
+        <pre in:fade>{JSON.stringify($relations, null, 2)}</pre>
+      {/key}
+    </div>
   </div>
 </div>
 
 <style lang="postcss">
   button {
     @apply bg-emerald-200  px-4 py-2;
+    &:disabled {
+      @apply opacity-50;
+    }
   }
   .dev {
     @apply grid gap-8;
