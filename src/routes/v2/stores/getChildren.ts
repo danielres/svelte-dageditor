@@ -1,4 +1,4 @@
-import type { Relation, Tag } from '../stores'
+import type { Relation, Tag } from '../types'
 
 export function getChildren(allRelations: Relation[], allTags: Tag[], id: string) {
   return allRelations

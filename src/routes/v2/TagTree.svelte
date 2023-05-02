@@ -1,6 +1,7 @@
 <script lang="ts">
+  import type { NestedTag } from './types'
+
   import { flash } from './actions/flash'
-  import type { NestedTag } from './stores/getNestedDescendants'
 
   export let tags: NestedTag[]
 </script>

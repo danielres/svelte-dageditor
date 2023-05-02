@@ -1,9 +1,7 @@
+import type { Operation, Relation, Tag } from './types'
+
 import { derived, get, writable } from 'svelte/store'
 import { getNestedDescendants } from './stores/getNestedDescendants'
-
-export type Relation = { parentId: string; childId: string }
-type Operation = { tag: string; from: string | null; to: string | null }
-export type Tag = { name: string; id: string }
 
 export const allRelations = writable<Relation[]>([])
 export const allTags = writable<Tag[]>([])
