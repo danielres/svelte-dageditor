@@ -3,7 +3,7 @@ import type { Tag, Relation } from '../stores'
 import { isTruthy } from '$lib/utils/array'
 import { getChildren } from './getChildren'
 
-type NestedTag = Tag & { children: NestedTag[] }
+export type NestedTag = Tag & { children: NestedTag[] }
 
 export function getNestedDescendants(
   allRelations: Relation[],

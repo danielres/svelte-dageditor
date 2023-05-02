@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { PageData } from './$types'
 
+  import TagTree from './TagTree.svelte'
   import {
     allRelations,
     allTags,
@@ -20,4 +21,4 @@
   const tagTree = makeTagTreeStore('<root>')
 </script>
 
-<pre class="text-xs leading-none">{JSON.stringify($tagTree, null, 2)}</pre>
+<TagTree tags={$tagTree} />
