@@ -1,5 +1,6 @@
 import type { Operation, Relation, Tag } from './types'
 
+import { tick } from 'svelte'
 import { derived, get, writable } from 'svelte/store'
 import { getNestedDescendants } from './stores/getNestedDescendants'
 
@@ -10,16 +11,17 @@ export const nextOperations = writable<Operation[]>([])
 export const prevOperations = writable<Operation[]>([])
 
 export function makeTagTreeStore(rootId: string) {
-  return derived([tagsStore, relationsStore], ([$allTags, $allRelations]) =>
-    getNestedDescendants($allRelations, $allTags, rootId)
-  )
+  return derived([tagsStore, relationsStore], ([$allTags, $allRelations]) => {
+    return getNestedDescendants($allRelations, $allTags, rootId)
+  })
 }
 
 function tagNameToTagId(name: string) {
   return get(tagsStore).find((t) => t.name === name)?.id
 }
 
-export function runOperation() {
+export async function runOperation() {
+  await tick()
   const operation = get(nextOperations)[0]
   if (!operation) return
   const { tag: tagName, from, to } = operation
