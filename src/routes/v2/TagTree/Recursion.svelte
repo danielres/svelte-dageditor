@@ -12,9 +12,6 @@
   data-parent-id={parentId}
   draggable={true}
   on:dragover|preventDefault
-  on:dragstart|self={(e) => {
-    e.dataTransfer?.setData('text/plain', JSON.stringify({ id: parentId, from: parentId }))
-  }}
   on:drop|self={async (e) => {
     const data = e.dataTransfer?.getData('text/plain')
     if (!data) return
