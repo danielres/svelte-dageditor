@@ -1,5 +1,3 @@
-import type { Actions, PageServerLoad } from './$types'
-
 import { redirect } from '@sveltejs/kit'
 import { eq } from 'drizzle-orm'
 import db from '../../db/db'
@@ -7,7 +5,7 @@ import { Workspace } from '../../db/models'
 import * as tables from '../../db/schema'
 import { resetData } from './resetData.server'
 
-export const load = (async () => {
+export const load = async () => {
   const ws = await Workspace.findByName('ws1')
 
   if (!ws) {
@@ -38,8 +36,8 @@ export const load = (async () => {
     relations: results.relations,
     workspace: ws,
   }
-}) satisfies PageServerLoad
+}
 
-export const actions: Actions = {
+export const actions = {
   'reset-data': async () => await resetData(),
 }

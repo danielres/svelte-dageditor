@@ -1,11 +1,9 @@
 <script lang="ts">
-  import type { PageData } from './$types'
-
   import Dev from './Dev.svelte'
   import Tree from './Tree.svelte'
   import { makeTreeStore, relationsStore, tagsStore } from './stores'
 
-  export let data: PageData
+  export let data
 
   $tagsStore = data.tags
   $relationsStore = data.relations

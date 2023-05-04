@@ -1,10 +1,10 @@
 import { isTruthy, onlyUnique } from '$lib/utils/array'
 import db from '../../../db/db'
 import * as tables from '../../../db/schema'
-import type { PageServerLoad } from './$types'
+
 import { eq, or } from 'drizzle-orm'
 
-export const load = (async ({ params, parent }) => {
+export const load = async ({ params, parent }) => {
   const workspace = (await parent()).workspaces.find((w) => w.name === params.ws)
   if (!workspace) throw new Error(`workspace ${params.ws} not found`)
 
@@ -32,4 +32,4 @@ export const load = (async ({ params, parent }) => {
       return { tags, relations }
     })
   return { tags, relations }
-}) satisfies PageServerLoad
+}

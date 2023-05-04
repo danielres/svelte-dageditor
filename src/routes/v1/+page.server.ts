@@ -1,4 +1,3 @@
-import type { Actions, PageServerLoad } from './$types'
 import type { Operation } from './types'
 
 import { UniqueViolationError, wrapError } from 'db-errors'
@@ -9,7 +8,7 @@ import { Tag, Workspace } from '../../db/models'
 import { tagsToTags } from '../../db/schema'
 import { resetData } from './resetData'
 
-export const load = (async () => {
+export const load = async () => {
   const workspace = await Workspace.findByName('ws1')
   const tags = await Tag.findAllByWorkspaceId(workspace.id)
 
@@ -21,9 +20,9 @@ export const load = (async () => {
       parentId,
     })),
   }
-}) satisfies PageServerLoad
+}
 
-export const actions: Actions = {
+export const actions = {
   'apply-operations': async ({ request }) => {
     const formData = await request.formData()
     const operations = JSON.parse(formData.get('operations') as string)
