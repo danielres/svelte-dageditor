@@ -7,6 +7,7 @@
     <ul>
       <li><a href="/v1">v1</a></li>
       <li><a href="/v2">v2</a></li>
+      <li><a href="/v3">v3</a></li>
     </ul>
 
     <ul>

@@ -10,6 +10,10 @@ export async function insert(values: { id?: string; name: string }) {
     .then((res) => res[0])
 }
 
+export async function findAll() {
+  return await db.select().from(workspaces)
+}
+
 export async function findByName(name: string) {
   return await db
     .select()
