@@ -12,8 +12,12 @@
   const tree = makeTreeStore('<root>')
 </script>
 
-<div class="grid grid-cols-2">
-  <main>
+<div class="grid grid-cols-[2fr_4fr]">
+  <main class="py-4 px-8">
+    <div>
+      <button>Undo</button>
+      <button>Redo</button>
+    </div>
     <Tree tag={$tree} />
   </main>
 
