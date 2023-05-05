@@ -1,0 +1,36 @@
+/* Inspired by: https://two-wrongs.com/draw-a-tree-structure-with-only-css.html */
+
+ul.tree,
+ul.tree li {
+  @apply relative;
+}
+
+ul.tree {
+  @apply list-none pl-7;
+}
+
+ul.tree {
+  li::before,
+  li::after {
+    content: '';
+    @apply absolute -left-4;
+  }
+
+  li::before {
+    @apply border-b-4 border-l-4 rounded-bl-lg;
+    top: 5px;
+    width: 16px;
+    height: 10px;
+  }
+
+  li::after {
+    @apply border-l-4;
+    height: calc(100% + 6px);
+    width: 0px;
+    top: -6px;
+  }
+}
+
+ul.tree > li:last-child::after {
+  height: 12px;
+}

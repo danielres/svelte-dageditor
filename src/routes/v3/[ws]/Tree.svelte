@@ -4,6 +4,7 @@
 
   import { derived } from 'svelte/store'
   import { commandsStore, draggedStore, getBranchIds } from './stores'
+  import './tree.css'
 
   const MAX_DEPTH = 10
 
@@ -34,6 +35,7 @@
 </script>
 
 <span
+  class="label {depth ? '' : 'root'}"
   on:dragover|preventDefault
   on:drop={onDrop}
   class:drop-allowed={$draggedStore && $isAllowedDropTarget}
@@ -43,7 +45,7 @@
 </span>
 
 {#if tag.children.length && depth < MAX_DEPTH}
-  <ul>
+  <ul class="tree">
     {#each tag.children as child}
       <li
         draggable={true}
@@ -60,23 +62,31 @@
 {/if}
 
 <style lang="postcss">
-  span {
-    @apply px-2 -ml-2 py-1 rounded inline-block mb-1 leading-none;
+  .label {
+    @apply rounded px-1 py-0.5 mb-1.5 inline-block;
     @apply transition-all duration-500;
-  }
-  li {
-    @apply pl-8 border-l;
-    :global(span) {
-      cursor: grab;
-      &:hover {
-        @apply bg-slate-200 transition-all;
+    @apply border-2 border-black/50;
+    @apply text-black font-bold text-sm;
+    @apply opacity-40;
+
+    &.root {
+      @apply w-6 h-6 rounded-full text-transparent ml-0.5 bg-gray-400 border-2 border-transparent;
+      &.drop-allowed {
+        @apply bg-emerald-500/40 opacity-100 border-2;
       }
     }
-  }
-  .drop-allowed {
-    @apply bg-emerald-100 text-emerald-700;
-  }
-  .drop-forbidden {
-    @apply opacity-25;
+
+    &:not(.root) {
+      cursor: grab;
+      &:hover {
+        @apply opacity-75;
+      }
+      &.drop-allowed {
+        @apply bg-emerald-100/25 text-emerald-700/50 border-emerald-600/40 opacity-100;
+      }
+      &.drop-forbidden {
+        @apply opacity-10;
+      }
+    }
   }
 </style>
