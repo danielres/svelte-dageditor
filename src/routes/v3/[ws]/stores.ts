@@ -20,7 +20,9 @@ export const commandsStore = {
   },
   exec() {
     const commands = get(_commandsStore)
-    const { kind, id, from, to } = commands[0]
+    const command = commands[0]
+    if (!command) return
+    const { kind, id, from, to } = command
     _commandsStore.update(($commands) => $commands.slice(1))
     relationsStore.update(($relations) => {
       return $relations.map((relation) => {
@@ -33,16 +35,38 @@ export const commandsStore = {
   subscribe: _commandsStore.subscribe,
 }
 
-export function makeTreeStore(rootId: string) {
-  return derived([tagsStore, relationsStore], ([$tags, $relations]) => {
-    const root = $tags.find((t) => t.id === rootId)
-    if (!root) throw new Error(`root tag ${rootId} not found`)
+export function makeTreeStore(rootId: string, tags: Tag[], relations: Relation[]) {
+  tagsStore.set(tags)
+  relationsStore.set(relations)
 
-    return {
-      ...root,
-      children: getBranch(root.id, $tags, $relations),
-    }
-  })
+  return {
+    tree: derived([tagsStore, relationsStore], ([$tags, $relations]) => {
+      const root = $tags.find((t) => t.id === rootId)
+      if (!root) throw new Error(`root tag ${rootId} not found`)
+
+      return {
+        ...root,
+        children: getBranch(root.id, $tags, $relations),
+      }
+    }),
+    undo() {
+      const history = get(historyStore)
+      if (!history.length) return
+      const { kind, id, from, to } = history[history.length - 1]
+      historyStore.update(($history) => $history.slice(0, -1))
+      commandsStore.add({ kind, id, from, to })
+
+      relationsStore.update(($relations) => {
+        return $relations.map((relation) => {
+          if (relation.childId !== id || relation.parentId !== to) return relation
+          return { ...relation, parentId: from }
+        })
+      })
+    },
+    redo: commandsStore.exec,
+    undos: derived(historyStore, ($history) => $history.length),
+    redos: derived(commandsStore, ($commands) => $commands.length),
+  }
 }
 
 function getChildren(parentId: string, tags: Tag[], relations: Relation[]) {
