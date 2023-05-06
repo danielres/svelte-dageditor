@@ -1,27 +1,26 @@
 <script lang="ts">
   import Dev from './Dev.svelte'
   import Tree from './Tree.svelte'
-  import { makeTreeStore, relationsStore, tagsStore } from './stores'
+  import { makeTreeStore } from './stores'
 
   export let data
 
-  const { tree, undo, redo, undos, redos } = makeTreeStore('<root>', data.tags, data.relations)
+  const tree = makeTreeStore('<root>', data.tags, data.relations)
+  const { undo, redo, undos, redos } = tree.commands
 </script>
 
-<div class="grid grid-cols-[2fr_4fr]">
+<div class="grid grid-cols-2">
   <main class="py-4 px-8 grid gap-8 h-fit">
     <div>
       <button on:click={undo} disabled={!$undos}>Undo</button>
       <button on:click={redo} disabled={!$redos}>Redo</button>
     </div>
 
-    <div>
-      <Tree tag={$tree} />
-    </div>
+    <Tree {tree} />
   </main>
 
   <aside class="py-4 px-8 bg-emerald-200 text-emerald-800">
-    <Dev />
+    <Dev {tree} />
   </aside>
 </div>
 
