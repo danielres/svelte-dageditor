@@ -1,6 +1,8 @@
 <script lang="ts">
-  import { fade } from 'svelte/transition'
   import type { Branch, TreeStore } from './stores'
+
+  import { fade } from 'svelte/transition'
+  import Icon from './Icon.svelte'
 
   export let branch: Branch
   export let depth = 0
@@ -48,6 +50,19 @@
       class:drop-forbidden={$dragged && !isAllowedDropTarget}
     >
       {branch.name}
+    </span>
+  {/if}
+  {#if !$dragged}
+    <span class="actions inline-flex gap-2">
+      <span class="w-0 opacity-0 pointer-events-none">_</span>
+      {#if depth === 0}
+        <button><Icon kind="add" /></button>
+      {:else}
+        <button><Icon kind="add" /></button>
+        <button><Icon kind="go" /></button>
+        <button><Icon kind="rename" /></button>
+        <button><Icon kind="delete" /></button>
+      {/if}
     </span>
   {/if}
 

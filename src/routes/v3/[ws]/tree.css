@@ -47,20 +47,13 @@
   }
 
   .root > .name {
-    cursor: default;
+    cursor: pointer;
+    font-size: 0.1px;
     @apply w-6 h-6 rounded-full text-transparent ml-0.5 bg-gray-400 border-2 border-transparent;
     &.drop-allowed {
       @apply bg-emerald-500/40 opacity-100 border-2;
     }
   }
-
-  /* &.root {
-    cursor: default;
-    @apply cursor-not-allowed;
-    &.drop-allowed {
-      @apply bg-emerald-100/25 text-emerald-700/50 border-emerald-600/40 opacity-100;
-    }
-  } */
 
   .name {
     @apply rounded px-1 py-0.5 mb-1.5 inline-block;
@@ -68,5 +61,20 @@
     @apply border-2 border-black/50;
     @apply text-black font-bold text-sm;
     @apply opacity-40;
+  }
+
+  .actions {
+    @apply opacity-0 delay-300 transition-opacity -ml-2 pl-2 w-0 overflow-hidden;
+    button {
+      @apply flex items-center text-gray-400 transition-colors;
+      @apply cursor-pointer;
+      &:hover {
+        @apply text-gray-800;
+      }
+    }
+  }
+  .actions:hover,
+  .name:hover + .actions {
+    @apply opacity-100 w-auto overflow-visible;
   }
 }
