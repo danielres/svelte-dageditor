@@ -5,6 +5,7 @@
   import Icon from './Icon.svelte'
 
   export let branch: Branch
+
   export let depth = 0
   export let tree: TreeStore
   export let root = false
@@ -26,55 +27,96 @@
     if (!data.from || !$dragged) return
     const { id } = $dragged
     $dragged = null
-    const command = { kind: 'move' as const, id, from: data.from, to: branch.id }
-    commands.add(command).exec()
+    commands.move({ id, from: data.from, to: branch.id })
+  }
+
+  let action: 'add' | 'rename' | null = null
+
+  const actions = {
+    rename: {
+      value: branch.name,
+      submit() {
+        commands.rename({ id: branch.id, from: branch.name, to: this.value })
+        action = null
+      },
+      cancel() {
+        this.value = branch.name
+        action = null
+      },
+    },
+    add: {
+      value: '',
+      submit() {
+        commands.insert({ parentId: branch.id, name: this.value })
+        this.value = ''
+        action = null
+      },
+      cancel() {
+        this.value = ''
+        action = null
+      },
+    },
   }
 </script>
 
 <div in:fade class="depth-{depth}" class:root>
-  {#if isAllowedDropTarget}
-    <span
-      class="name"
-      class:drop-allowed={$dragged && isAllowedDropTarget}
-      class:drop-forbidden={$dragged && !isAllowedDropTarget}
-      on:dragover|preventDefault
-      on:drop={onDrop}
-    >
-      {branch.name}
-    </span>
+  {#if action === 'rename'}
+    <form on:submit={() => actions.rename.submit()} class="name">
+      <!-- svelte-ignore a11y-autofocus -->
+      <input type="text" bind:value={actions.rename.value} autofocus />
+    </form>
   {:else}
     <span
       class="name"
-      class:root={depth === 0}
       class:drop-allowed={$dragged && isAllowedDropTarget}
       class:drop-forbidden={$dragged && !isAllowedDropTarget}
+      on:dragover={isAllowedDropTarget ? (e) => e.preventDefault() : undefined}
+      on:drop={isAllowedDropTarget ? onDrop : undefined}
     >
       {branch.name}
     </span>
   {/if}
+
   {#if !$dragged}
-    <span class="actions inline-flex gap-2">
+    <span class="actions" class:autohide={!action}>
       <span class="w-0 opacity-0 pointer-events-none">_</span>
-      {#if depth === 0}
+      {#if action === 'rename'}
+        <button on:click={() => actions.rename.submit()}><Icon kind="submit" /></button>
+        <button on:click={() => actions.rename.cancel()}><Icon kind="cancel" /></button>
+      {:else if depth === 0}
         <button><Icon kind="add" /></button>
       {:else}
-        <button><Icon kind="add" /></button>
+        <button on:click={() => (action = 'add')}><Icon kind="add" /></button>
         <button><Icon kind="go" /></button>
-        <button><Icon kind="rename" /></button>
+        <button on:click={() => (action = 'rename')}><Icon kind="rename" /></button>
         <button><Icon kind="delete" /></button>
       {/if}
     </span>
   {/if}
 
   <ul>
+    {#if action === 'add'}
+      <li in:fade>
+        <form on:submit={() => actions.add.submit()} class="name">
+          <!-- svelte-ignore a11y-autofocus -->
+          <input type="text" bind:value={actions.add.value} autofocus />
+        </form>
+        <span class="actions">
+          <span class="w-0 opacity-0 pointer-events-none">_</span>
+          <button on:click={() => actions.add.submit()}><Icon kind="submit" /></button>
+          <button on:click={() => actions.add.cancel()}><Icon kind="cancel" /></button>
+        </span>
+      </li>
+    {/if}
+
     {#each branch.children as childBranch}
       <li
         draggable={true}
         on:dragstart|self={(e) => {
-          $dragged = childBranch
+          dragged.set(childBranch)
           dataTransfer(e).set({ from: branch.id })
         }}
-        on:dragend|self={() => ($dragged = null)}
+        on:dragend|self={() => dragged.clear()}
       >
         <svelte:self branch={childBranch} depth={depth + 1} {tree} />
       </li>

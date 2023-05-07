@@ -33,7 +33,7 @@
     height: 12px;
   }
 
-  :not(.root) > .name {
+  :not(.root) > span.name {
     cursor: grab;
     &:hover {
       @apply opacity-75;
@@ -47,7 +47,6 @@
   }
 
   .root > .name {
-    cursor: pointer;
     font-size: 0.1px;
     @apply w-6 h-6 rounded-full text-transparent ml-0.5 bg-gray-400 border-2 border-transparent;
     &.drop-allowed {
@@ -63,8 +62,18 @@
     @apply opacity-40;
   }
 
+  form.name {
+    input[type='text'] {
+      @apply w-24;
+      &:focus {
+        @apply outline-none;
+      }
+    }
+  }
+
   .actions {
-    @apply opacity-0 delay-300 transition-opacity -ml-2 pl-2 w-0 overflow-hidden;
+    @apply -ml-2 pl-2;
+    @apply inline-flex gap-2;
     button {
       @apply flex items-center text-gray-400 transition-colors;
       @apply cursor-pointer;
@@ -73,8 +82,11 @@
       }
     }
   }
-  .actions:hover,
-  .name:hover + .actions {
+  .actions.autohide {
+    @apply opacity-0 transition-opacity overflow-hidden w-0;
+  }
+  .actions.autohide:hover,
+  .name:hover + .actions.autohide {
     @apply opacity-100 w-auto overflow-visible;
   }
 }

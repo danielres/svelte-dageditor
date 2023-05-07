@@ -2,10 +2,14 @@ import { isTruthy, onlyUnique } from '$lib/utils/array'
 import { derived, get, writable } from 'svelte/store'
 
 export type TreeStore = ReturnType<typeof makeTreeStore>
+
 export type Relation = { id: string; parentId: string; childId: string }
 export type Node = { id: string; name: string }
 export type Branch = Node & { children: Branch[] }
-export type Command = { kind: 'move'; id: string; from: string; to: string }
+type CommandMove = { kind: 'move'; id: string; from: string; to: string }
+type CommandRename = { kind: 'rename'; id: string; from: string; to: string }
+type CommandInsert = { kind: 'insert'; id: string; name: string; parentId: string }
+export type Command = CommandMove | CommandRename | CommandInsert
 
 export function makeTreeStore(rootId: string, tags: Node[], relations: Relation[], maxDepth = 10) {
   const draggedStore = writable<Branch | null>(null)
@@ -22,15 +26,38 @@ export function makeTreeStore(rootId: string, tags: Node[], relations: Relation[
     exec() {
       const command = get(this)[0]
       if (!command) return
-      const { kind, id, from, to } = command
+
+      switch (command.kind) {
+        case 'insert':
+          tagsStore.update(($tags) => [...$tags, { id: command.id, name: command.name }])
+          relationsStore.update(($relations) => [
+            ...$relations,
+            { id: crypto.randomUUID(), parentId: command.parentId, childId: command.id },
+          ])
+          break
+
+        case 'move':
+          relationsStore.update(($relations) => {
+            return $relations.map((relation) => {
+              if (relation.childId !== command.id || relation.parentId !== command.from)
+                return relation
+              return { ...relation, parentId: command.to }
+            })
+          })
+          break
+
+        case 'rename':
+          tagsStore.update(($tags) =>
+            $tags.map((t) => (t.id === command.id ? { ...t, name: command.to } : t))
+          )
+          break
+
+        default:
+          return
+      }
+
       this.update(($commands) => $commands.slice(1))
-      relationsStore.update(($relations) => {
-        return $relations.map((relation) => {
-          if (relation.childId !== id || relation.parentId !== from) return relation
-          return { ...relation, parentId: to }
-        })
-      })
-      historyStore.update(($history) => [...$history, { kind, id, from, to }])
+      historyStore.update(($history) => [...$history, command])
     },
   }
 
@@ -51,22 +78,61 @@ export function makeTreeStore(rootId: string, tags: Node[], relations: Relation[
     dragged: {
       ...draggedStore,
       ids: derived(draggedStore, ($dragged) => getBranchIds($dragged)),
+      set(branch: Branch) {
+        draggedStore.set(branch)
+      },
+      clear() {
+        draggedStore.set(null)
+      },
     },
     commands: {
       ...commandsStore,
       history: historyStore,
+      move(data: { id: string; from: string; to: string }) {
+        commandsStore.add({ kind: 'move', ...data })
+        commandsStore.exec()
+      },
+      rename(data: { id: string; from: string; to: string }) {
+        commandsStore.add({ kind: 'rename', ...data })
+        commandsStore.exec()
+      },
+      insert(data: { name: string; parentId: string }) {
+        commandsStore.add({ kind: 'insert', id: crypto.randomUUID(), ...data })
+        commandsStore.exec()
+      },
       undo: () => {
         const history = get(historyStore)
         if (!history.length) return
-        const { kind, id, from, to } = history[history.length - 1]
+        const command = history[history.length - 1]
         historyStore.update(($history) => $history.slice(0, -1))
-        commandsStore.add({ kind, id, from, to })
-        relationsStore.update(($relations) => {
-          return $relations.map((relation) => {
-            if (relation.childId !== id || relation.parentId !== to) return relation
-            return { ...relation, parentId: from }
-          })
-        })
+        commandsStore.add(command)
+        switch (command.kind) {
+          case 'move':
+            relationsStore.update(($relations) => {
+              return $relations.map((relation) => {
+                if (relation.childId !== command.id || relation.parentId !== command.to)
+                  return relation
+                return { ...relation, parentId: command.from }
+              })
+            })
+            break
+
+          case 'rename':
+            tagsStore.update(($tags) =>
+              $tags.map((t) => (t.id === command.id ? { ...t, name: command.from } : t))
+            )
+            break
+
+          case 'insert':
+            tagsStore.update(($tags) => $tags.filter((t) => t.id !== command.id))
+            relationsStore.update(($relations) =>
+              $relations.filter((r) => r.childId !== command.id)
+            )
+            break
+
+          default:
+            break
+        }
       },
       redo: () => commandsStore.exec(),
       undos: derived(historyStore, ($history) => $history.length),
