@@ -4,10 +4,13 @@
   import Branch from './Branch.svelte'
   import './tree.css'
 
+  let className = 'tree'
+
+  export { className as class }
   export let tree: TreeStore
   export let root = true
 </script>
 
-<div class="tree">
+<div class={className}>
   <Branch branch={$tree} {tree} {root} />
 </div>
