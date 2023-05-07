@@ -8,9 +8,6 @@
 
   ul {
     @apply list-none pl-7;
-  }
-
-  ul {
     li::before,
     li::after {
       content: '';
@@ -34,5 +31,42 @@
 
   ul > li:last-child::after {
     height: 12px;
+  }
+
+  :not(.root) > .name {
+    cursor: grab;
+    &:hover {
+      @apply opacity-75;
+    }
+    &.drop-allowed {
+      @apply bg-emerald-100/25 text-emerald-700/50 border-emerald-600/40 opacity-100;
+    }
+    &.drop-forbidden {
+      @apply opacity-10;
+    }
+  }
+
+  .root > .name {
+    cursor: default;
+    @apply w-6 h-6 rounded-full text-transparent ml-0.5 bg-gray-400 border-2 border-transparent;
+    &.drop-allowed {
+      @apply bg-emerald-500/40 opacity-100 border-2;
+    }
+  }
+
+  /* &.root {
+    cursor: default;
+    @apply cursor-not-allowed;
+    &.drop-allowed {
+      @apply bg-emerald-100/25 text-emerald-700/50 border-emerald-600/40 opacity-100;
+    }
+  } */
+
+  .name {
+    @apply rounded px-1 py-0.5 mb-1.5 inline-block;
+    @apply transition-all duration-500;
+    @apply border-2 border-black/50;
+    @apply text-black font-bold text-sm;
+    @apply opacity-40;
   }
 }

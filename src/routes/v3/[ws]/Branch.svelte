@@ -5,6 +5,7 @@
   export let branch: Branch
   export let depth = 0
   export let tree: TreeStore
+  export let root = false
 
   const { dragged, commands } = tree
   const { ids: draggedIds } = dragged
@@ -28,11 +29,10 @@
   }
 </script>
 
-<div in:fade>
+<div in:fade class="depth-{depth}" class:root>
   {#if isAllowedDropTarget}
     <span
       class="name"
-      class:root={depth === 0}
       class:drop-allowed={$dragged && isAllowedDropTarget}
       class:drop-forbidden={$dragged && !isAllowedDropTarget}
       on:dragover|preventDefault
@@ -66,42 +66,3 @@
     {/each}
   </ul>
 </div>
-
-<style lang="postcss">
-  .name {
-    @apply rounded px-1 py-0.5 mb-1.5 inline-block;
-    @apply transition-all duration-500;
-    @apply border-2 border-black/50;
-    @apply text-black font-bold text-sm;
-    @apply opacity-40;
-
-    &:not(.root) {
-      cursor: grab;
-      &:hover {
-        @apply opacity-75;
-      }
-      &.drop-allowed {
-        @apply bg-emerald-100/25 text-emerald-700/50 border-emerald-600/40 opacity-100;
-      }
-      &.drop-forbidden {
-        @apply opacity-10;
-      }
-    }
-
-    /* &.root {
-      cursor: default;
-      @apply cursor-not-allowed;
-      &.drop-allowed {
-        @apply bg-emerald-100/25 text-emerald-700/50 border-emerald-600/40 opacity-100;
-      }
-    } */
-
-    &.root {
-      cursor: default;
-      @apply w-6 h-6 rounded-full text-transparent ml-0.5 bg-gray-400 border-2 border-transparent;
-      &.drop-allowed {
-        @apply bg-emerald-500/40 opacity-100 border-2;
-      }
-    }
-  }
-</style>

@@ -16,7 +16,7 @@
       <button on:click={redo} disabled={!$redos}>Redo</button>
     </div>
 
-    <Tree {tree} />
+    <Tree {tree} root={true} />
   </main>
 
   <aside class="py-4 px-8 bg-emerald-200 text-emerald-800">
