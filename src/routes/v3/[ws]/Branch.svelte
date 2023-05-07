@@ -26,7 +26,7 @@
     const data = dataTransfer(e).get()
     if (!data.from || !$dragged) return
     const { id } = $dragged
-    $dragged = null
+    dragged.clear()
     commands.move({ id, from: data.from, to: branch.id })
   }
 
