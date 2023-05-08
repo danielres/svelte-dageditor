@@ -57,24 +57,30 @@
       },
     },
   }
+
+  let isOpen = true
+  function toggleOpen() {
+    if (branch.children.length && !root) isOpen = !isOpen
+  }
 </script>
 
-<div in:fade class="depth-{depth}" class:root>
+<div in:fade class="depth-{depth}" class:root class:closed={!isOpen}>
   {#if action === 'rename'}
     <form on:submit={() => actions.rename.submit()} class="name">
       <!-- svelte-ignore a11y-autofocus -->
       <input type="text" bind:value={actions.rename.value} autofocus />
     </form>
   {:else}
-    <span
+    <button
       class="name"
       class:drop-allowed={$dragged && isAllowedDropTarget}
       class:drop-forbidden={$dragged && !isAllowedDropTarget}
       on:dragover={isAllowedDropTarget ? (e) => e.preventDefault() : undefined}
       on:drop={isAllowedDropTarget ? onDrop : undefined}
+      on:click={toggleOpen}
     >
       {branch.name}
-    </span>
+    </button>
   {/if}
 
   {#if !$dragged}
@@ -109,17 +115,19 @@
       </li>
     {/if}
 
-    {#each branch.children as childBranch}
-      <li
-        draggable={true}
-        on:dragstart|self={(e) => {
-          dragged.set(childBranch)
-          dataTransfer(e).set({ from: branch.id })
-        }}
-        on:dragend|self={() => dragged.clear()}
-      >
-        <svelte:self branch={childBranch} depth={depth + 1} {tree} />
-      </li>
-    {/each}
+    {#if isOpen}
+      {#each branch.children as childBranch}
+        <li
+          draggable={true}
+          on:dragstart|self={(e) => {
+            dragged.set(childBranch)
+            dataTransfer(e).set({ from: branch.id })
+          }}
+          on:dragend|self={() => dragged.clear()}
+        >
+          <svelte:self branch={childBranch} depth={depth + 1} {tree} />
+        </li>
+      {/each}
+    {/if}
   </ul>
 </div>

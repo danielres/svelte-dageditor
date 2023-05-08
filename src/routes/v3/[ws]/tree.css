@@ -33,7 +33,7 @@
     height: 12px;
   }
 
-  :not(.root) > span.name {
+  :not(.root) > button.name {
     cursor: grab;
     &:hover {
       @apply opacity-75;
@@ -48,6 +48,7 @@
 
   .root > .name {
     font-size: 0.1px;
+    cursor: default;
     @apply w-6 h-6 rounded-full text-transparent ml-0.5 bg-gray-400 border-2 border-transparent;
     &.drop-allowed {
       @apply bg-emerald-500/40 opacity-100 border-2;
@@ -69,6 +70,10 @@
         @apply outline-none;
       }
     }
+  }
+
+  .closed button.name:after {
+    @apply content-['…'] pl-1;
   }
 
   .actions {
