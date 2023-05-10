@@ -1,17 +1,16 @@
 <script lang="ts">
-  import { tags } from '../../../db/schema'
   import Dev from './Dev.svelte'
   import Tree from './Tree.svelte'
+  import type { Relation, Node } from './stores'
   import { makeTreeStore } from './stores'
 
-  export let data
+  const tags: Node[] = [{ name: '<root>', id: '<root>' }]
+  const relations: Relation[] = []
 
-  const tree = makeTreeStore('<root>', data.tags, data.relations)
+  const tree = makeTreeStore('<root>', tags, relations)
   const { undo, redo, undos, redos } = tree.commands
 
-  const t = tree.tags
-  const r = tree.relations
-  $: tree2 = makeTreeStore('t1', $t, $r)
+  import './tree.css'
 </script>
 
 <div class="grid grid-cols-2">
@@ -22,7 +21,6 @@
     </div>
 
     <Tree {tree} root={true} />
-    <Tree tree={tree2} root={false} />
   </main>
 
   <aside class="py-4 px-8 bg-emerald-200 text-emerald-800">

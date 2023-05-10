@@ -11,25 +11,16 @@
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "test:unit": "ENV=test dotenv vitest -- --threads=false",
     "lint": "prettier --plugin-search-dir . --check . && eslint .",
-    "format": "prettier --plugin-search-dir . --write .",
-    "db:reset": "src/db/bin/reset.sh",
-    "db:start": "pg_ctl -D data start ",
-    "db:stop": "pg_ctl -D data stop",
-    "db:migration:generate": "drizzle-kit generate:pg",
-    "db:migration:generate:custom": "pnpm db:migration:generate --custom",
-    "db:migration:run": "dotenv vite-node ./src/db/bin/migrate.ts"
+    "format": "prettier --plugin-search-dir . --write ."
   },
   "devDependencies": {
     "@playwright/test": "^1.33.0",
     "@sveltejs/adapter-auto": "^2.0.1",
     "@sveltejs/kit": "^1.16.3",
     "@types/pg": "^8.6.6",
-    "@types/sortablejs": "^1.15.1",
     "@typescript-eslint/eslint-plugin": "^5.59.5",
     "@typescript-eslint/parser": "^5.59.5",
     "autoprefixer": "^10.4.14",
-    "dotenv-cli": "^7.2.1",
-    "drizzle-kit": "^0.17.6",
     "eslint": "^8.40.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-svelte3": "^4.0.0",
@@ -44,14 +35,8 @@
     "tslib": "^2.5.0",
     "typescript": "^5.0.4",
     "vite": "^4.3.5",
-    "vite-node": "^0.30.1",
     "vitest": "^0.25.8"
   },
   "type": "module",
-  "dependencies": {
-    "db-errors": "^0.2.3",
-    "drizzle-orm": "^0.24.5",
-    "pg": "^8.10.0",
-    "sortablejs": "^1.15.0"
-  }
+  "dependencies": {}
 }
