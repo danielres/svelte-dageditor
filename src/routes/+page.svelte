@@ -4,10 +4,9 @@
   import type { Relation, Node } from './stores'
   import { makeTreeStore } from './stores'
 
-  const tags: Node[] = [{ name: '<root>', id: '<root>' }]
-  const relations: Relation[] = []
+  export let data
 
-  const tree = makeTreeStore('<root>', tags, relations)
+  const tree = makeTreeStore('<root>', data.nodes, data.relations)
   const { undo, redo, undos, redos } = tree.commands
 
   import './tree.css'
