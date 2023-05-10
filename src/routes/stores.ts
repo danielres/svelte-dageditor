@@ -8,17 +8,19 @@ export type Relation = { id: string; parentId: string; childId: string }
 export type Node = { id: string; name: string }
 export type Branch = Node & { children: Branch[] }
 export type Command =
-  | CommandMove
-  | CommandRename
-  | CommandInsert
   | CommandAddLinkedCopy
+  | CommandDelete
+  | CommandInsert
+  | CommandMove
   | CommandRemoveLinkedCopy
+  | CommandRename
 
 type CommandAddLinkedCopy = { kind: 'add-linked-copy'; id: string; parentId: string }
-type CommandRemoveLinkedCopy = { kind: 'remove-linked-copy'; id: string; parentId: string }
-type CommandMove = { kind: 'move'; id: string; from: string; to: string }
-type CommandRename = { kind: 'rename'; id: string; from: string; to: string }
+type CommandDelete = { kind: 'delete'; tag: Node; parentId: string; childrenIds: string[] }
 type CommandInsert = { kind: 'insert'; id: string; name: string; parentId: string }
+type CommandMove = { kind: 'move'; id: string; from: string; to: string }
+type CommandRemoveLinkedCopy = { kind: 'remove-linked-copy'; id: string; parentId: string }
+type CommandRename = { kind: 'rename'; id: string; from: string; to: string }
 
 export function makeTreeStore(rootId: string, tags: Node[], relations: Relation[], maxDepth = 10) {
   const draggedStore = writable<Branch | null>(null)
@@ -49,6 +51,17 @@ export function makeTreeStore(rootId: string, tags: Node[], relations: Relation[
             commandsStore.add(command).exec()
           },
         },
+      },
+      delete: (data: { id: string }) => {
+        const relations = get(relationsStore)
+        const parentId = relations.find((r) => r.childId === data.id)?.parentId
+        if (!parentId) return
+        const tags = get(tagsStore)
+        const tag = tags.find((t) => t.id === data.id)
+        if (!tag) return
+        const childrenIds = getChildren(data.id, tags, relations).map((c) => c.id)
+        const command = { kind: 'delete', tag, parentId, childrenIds } as const
+        commandsStore.add(command).exec()
       },
       move: (data: { id: string; from: string; to: string }) => {
         const command = { kind: 'move', ...data } as const
@@ -86,12 +99,28 @@ function exec(
 ) {
   const command = get(commandStore)[0]
   if (!command) return
+  
   switch (command.kind) {
     case 'add-linked-copy':
       relationsStore.update(($relations) => [
         ...$relations,
         { id: crypto.randomUUID(), parentId: command.parentId, childId: command.id },
       ])
+      break
+
+    case 'delete':
+      {
+        const { tag, parentId, childrenIds } = command
+        relationsStore.update(($relations) =>
+          $relations.map((r) => {
+            if (r.parentId !== tag.id) return r
+            if (!childrenIds.includes(r.childId)) return r
+            return { ...r, parentId }
+          })
+        )
+        relationsStore.update(($relations) => $relations.filter((r) => r.childId !== tag.id))
+        tagsStore.update(($tags) => $tags.filter((t) => t.id !== tag.id))
+      }
       break
 
     case 'remove-linked-copy':
@@ -154,6 +183,24 @@ function undo(
   commandsStore.add(command)
 
   switch (command.kind) {
+    case 'delete':
+      {
+        const { tag, parentId, childrenIds } = command
+        tagsStore.update(($tags) => [...$tags, tag])
+
+        relationsStore.update(($relations) => {
+          return $relations.map((r) => {
+            if (!childrenIds.includes(r.childId)) return r
+            return { ...r, parentId: tag.id }
+          })
+        })
+        relationsStore.update(($relations) => [
+          ...$relations,
+          { id: crypto.randomUUID(), parentId, childId: tag.id },
+        ])
+      }
+      break
+
     case 'add-linked-copy':
       const { id, parentId } = command
       let foundOne = false

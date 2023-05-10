@@ -69,6 +69,9 @@
         },
       },
     },
+    delete() {
+      commands.delete({ id: branch.id })
+    },
   }
 
   let isOpen = true
@@ -116,7 +119,7 @@
               <Icon kind="linked-copy-break" />
             </button>
           {:else}
-            <button class="danger"><Icon kind="delete" /></button>
+            <button on:click={() => actions.delete()} class="danger"><Icon kind="delete" /></button>
           {/if}
         {/if}
       {/if}
