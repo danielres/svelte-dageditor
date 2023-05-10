@@ -46,6 +46,10 @@
     }
   }
 
+  .root > .actions {
+    @apply relative top-1;
+  }
+
   .root > .name {
     font-size: 0.1px;
     cursor: default;
