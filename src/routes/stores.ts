@@ -98,8 +98,11 @@ function exec(
 
     case 'move':
       relationsStore.update(($relations) => {
+        let foundOne = false
         return $relations.map((relation) => {
-          if (relation.childId !== command.id || relation.parentId !== command.from) return relation
+          if (foundOne || relation.childId !== command.id || relation.parentId !== command.from)
+            return relation
+          foundOne = true
           return { ...relation, parentId: command.to }
         })
       })
