@@ -9,7 +9,7 @@
   const tree = makeTreeStore('<root>', data.nodes, data.relations)
   const { undo, redo, undos, redos } = tree.commands
 
-  import './tree.css'
+  import './tree.postcss'
 </script>
 
 <div class="grid grid-cols-2">
