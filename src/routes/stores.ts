@@ -170,9 +170,9 @@ function getBranch(
   const children =
     depth > maxDepth
       ? []
-      : getChildren(node.id, nodes, relations).map((child) =>
-          getBranch(child, nodes, relations, maxDepth, depth + 1)
-        )
+      : getChildren(node.id, nodes, relations)
+          .map((child) => getBranch(child, nodes, relations, maxDepth, depth + 1))
+          .sort(byName)
 
   return { ...node, children }
 }
@@ -181,4 +181,10 @@ function getBranchIds(tagWithChildren: Branch | null): Node['id'][] {
   if (!tagWithChildren) return []
   const { children, ...rest } = tagWithChildren
   return [rest.id, ...children.flatMap(getBranchIds)].filter(onlyUnique)
+}
+
+function byName(a: Node, b: Node) {
+  if (a.name > b.name) return 1
+  if (a.name < b.name) return -1
+  return 0
 }
