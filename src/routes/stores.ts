@@ -7,9 +7,15 @@ export type TreeStore = ReturnType<typeof makeTreeStore>
 export type Relation = { id: string; parentId: string; childId: string }
 export type Node = { id: string; name: string }
 export type Branch = Node & { children: Branch[] }
-export type Command = CommandMove | CommandRename | CommandInsert | CommandAddLinkedCopy
+export type Command =
+  | CommandMove
+  | CommandRename
+  | CommandInsert
+  | CommandAddLinkedCopy
+  | CommandRemoveLinkedCopy
 
 type CommandAddLinkedCopy = { kind: 'add-linked-copy'; id: string; parentId: string }
+type CommandRemoveLinkedCopy = { kind: 'remove-linked-copy'; id: string; parentId: string }
 type CommandMove = { kind: 'move'; id: string; from: string; to: string }
 type CommandRename = { kind: 'rename'; id: string; from: string; to: string }
 type CommandInsert = { kind: 'insert'; id: string; name: string; parentId: string }
@@ -36,6 +42,10 @@ export function makeTreeStore(rootId: string, tags: Node[], relations: Relation[
         linked: {
           add: (data: { id: string; parentId: string }) => {
             const command = { kind: 'add-linked-copy', ...data } as const
+            commandsStore.add(command).exec()
+          },
+          remove: (data: { id: string; parentId: string }) => {
+            const command = { kind: 'remove-linked-copy', ...data } as const
             commandsStore.add(command).exec()
           },
         },
@@ -78,14 +88,23 @@ function exec(
   if (!command) return
   switch (command.kind) {
     case 'add-linked-copy':
-      const original = get(tagsStore).find((t) => t.id === command.id)
-      if (!original) return
-      const parent = get(tagsStore).find((t) => t.id === command.parentId)
-      tagsStore.update(($tags) => [...$tags, original])
       relationsStore.update(($relations) => [
         ...$relations,
         { id: crypto.randomUUID(), parentId: command.parentId, childId: command.id },
       ])
+      break
+
+    case 'remove-linked-copy':
+      const { id, parentId } = command
+      let foundOne = false
+
+      relationsStore.update(($relations) =>
+        $relations.filter((r) => {
+          if (r.parentId !== parentId || r.childId !== id || foundOne) return true
+          foundOne = true
+          return false
+        })
+      )
       break
 
     case 'insert':
@@ -135,6 +154,25 @@ function undo(
   commandsStore.add(command)
 
   switch (command.kind) {
+    case 'add-linked-copy':
+      const { id, parentId } = command
+      let foundOne = false
+      relationsStore.update(($relations) =>
+        $relations.filter((r) => {
+          if (r.parentId !== parentId || r.childId !== id || foundOne) return true
+          foundOne = true
+          return false
+        })
+      )
+      break
+
+    case 'remove-linked-copy':
+      relationsStore.update(($relations) => [
+        ...$relations,
+        { id: crypto.randomUUID(), parentId: command.parentId, childId: command.id },
+      ])
+      break
+
     case 'insert':
       tagsStore.update(($tags) => $tags.filter((t) => t.id !== command.id))
       relationsStore.update(($relations) => $relations.filter((r) => r.childId !== command.id))
