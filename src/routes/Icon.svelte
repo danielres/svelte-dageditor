@@ -1,7 +1,16 @@
 <!-- Credits: Heroicons https://heroicons.com/ -->
 
 <script lang="ts">
-  export let kind: 'add' | 'cancel' | 'copy' | 'delete' | 'linked-copy' | 'rename' | 'submit' | 'go'
+  export let kind:
+    | 'add'
+    | 'cancel'
+    | 'copy'
+    | 'delete'
+    | 'linked-copy'
+    | 'linked-copy-break'
+    | 'rename'
+    | 'submit'
+    | 'go'
 </script>
 
 <svg
@@ -34,6 +43,25 @@
       stroke-linecap="round"
       stroke-linejoin="round"
       d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+    />
+  {/if}
+  {#if kind === 'linked-copy-break'}
+    <path
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      d="M13.1 8.8a4.3 4.3 0 0 1 1.2 7L10 20c-4 4-10-2-6-6l1.6-1.7"
+      style="stroke-width:1.5"
+    />
+    <path
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      d="M9.2.9v4.7ZM3.1 3l3.3 3.3ZM.9 9.3h4.8Zm17.4 5.4H23zm-.7 2.8 3.3 3.4zm-2.8.8v4.8z"
+    />
+    <path
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      d="M18.4 11.7 20 10c4-4-2-10-6-6L9.7 8.3a4.3 4.3 0 0 0 1.2 6.9"
+      style="stroke-width:1.5"
     />
   {/if}
   {#if kind === 'linked-copy'}
