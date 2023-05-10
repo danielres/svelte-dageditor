@@ -89,13 +89,13 @@
       {#if action === 'rename'}
         <button on:click={() => actions.rename.submit()}><Icon kind="submit" /></button>
         <button on:click={() => actions.rename.cancel()}><Icon kind="cancel" /></button>
-      {:else if depth === 0}
-        <button><Icon kind="add" /></button>
       {:else}
         <button on:click={() => (action = 'add')}><Icon kind="add" /></button>
-        <button><Icon kind="go" /></button>
-        <button on:click={() => (action = 'rename')}><Icon kind="rename" /></button>
-        <button><Icon kind="delete" /></button>
+        {#if depth > 0}
+          <button><Icon kind="go" /></button>
+          <button on:click={() => (action = 'rename')}><Icon kind="rename" /></button>
+          <button><Icon kind="delete" /></button>
+        {/if}
       {/if}
     </span>
   {/if}
