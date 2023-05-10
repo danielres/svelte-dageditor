@@ -63,6 +63,10 @@
           if (!parent) return
           commands.copy.linked.add({ id: branch.id, parentId: parent.id })
         },
+        remove() {
+          if (!parent) return
+          commands.copy.linked.remove({ id: branch.id, parentId: parent.id })
+        },
       },
     },
   }
@@ -71,6 +75,9 @@
   function toggleOpen() {
     if (branch.children.length && !root) isOpen = !isOpen
   }
+
+  const relations = tree.relations
+  $: hasLinkedCopy = $relations.filter((r) => r.childId === branch.id)?.length > 1
 </script>
 
 <div in:fade class="depth-{depth}" class:root class:closed={!isOpen}>
@@ -104,7 +111,13 @@
           <button on:click={() => (action = 'rename')}><Icon kind="rename" /></button>
           <button on:click={() => actions.copy.linked.add()}><Icon kind="linked-copy" /></button>
           <button><Icon kind="go" /></button>
-          <button><Icon kind="delete" /></button>
+          {#if hasLinkedCopy}
+            <button on:click={() => actions.copy.linked.remove()}>
+              <Icon kind="linked-copy-break" />
+            </button>
+          {:else}
+            <button class="danger"><Icon kind="delete" /></button>
+          {/if}
         {/if}
       {/if}
     </span>
