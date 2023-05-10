@@ -92,8 +92,9 @@
       {:else}
         <button on:click={() => (action = 'add')}><Icon kind="add" /></button>
         {#if depth > 0}
-          <button><Icon kind="go" /></button>
           <button on:click={() => (action = 'rename')}><Icon kind="rename" /></button>
+          <button><Icon kind="linked-copy" /></button>
+          <button><Icon kind="go" /></button>
           <button><Icon kind="delete" /></button>
         {/if}
       {/if}
