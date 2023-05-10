@@ -7,8 +7,9 @@ export type TreeStore = ReturnType<typeof makeTreeStore>
 export type Relation = { id: string; parentId: string; childId: string }
 export type Node = { id: string; name: string }
 export type Branch = Node & { children: Branch[] }
-export type Command = CommandMove | CommandRename | CommandInsert
+export type Command = CommandMove | CommandRename | CommandInsert | CommandAddLinkedCopy
 
+type CommandAddLinkedCopy = { kind: 'add-linked-copy'; id: string; parentId: string }
 type CommandMove = { kind: 'move'; id: string; from: string; to: string }
 type CommandRename = { kind: 'rename'; id: string; from: string; to: string }
 type CommandInsert = { kind: 'insert'; id: string; name: string; parentId: string }
@@ -31,6 +32,14 @@ export function makeTreeStore(rootId: string, tags: Node[], relations: Relation[
     commands: {
       ...readonly(commandsStore),
       history: readonly(historyStore),
+      copy: {
+        linked: {
+          add: (data: { id: string; parentId: string }) => {
+            const command = { kind: 'add-linked-copy', ...data } as const
+            commandsStore.add(command).exec()
+          },
+        },
+      },
       move: (data: { id: string; from: string; to: string }) => {
         const command = { kind: 'move', ...data } as const
         commandsStore.add(command).exec()
@@ -68,6 +77,17 @@ function exec(
   const command = get(commandStore)[0]
   if (!command) return
   switch (command.kind) {
+    case 'add-linked-copy':
+      const original = get(tagsStore).find((t) => t.id === command.id)
+      if (!original) return
+      const parent = get(tagsStore).find((t) => t.id === command.parentId)
+      tagsStore.update(($tags) => [...$tags, original])
+      relationsStore.update(($relations) => [
+        ...$relations,
+        { id: crypto.randomUUID(), parentId: command.parentId, childId: command.id },
+      ])
+      break
+
     case 'insert':
       tagsStore.update(($tags) => [...$tags, { id: command.id, name: command.name }])
       relationsStore.update(($relations) => [

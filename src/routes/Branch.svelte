@@ -8,6 +8,7 @@
 
   export let depth = 0
   export let tree: TreeStore
+  export let parent: Branch | undefined = undefined
   export let root = false
 
   const { dragged, commands } = tree
@@ -56,6 +57,14 @@
         action = null
       },
     },
+    copy: {
+      linked: {
+        add() {
+          if (!parent) return
+          commands.copy.linked.add({ id: branch.id, parentId: parent.id })
+        },
+      },
+    },
   }
 
   let isOpen = true
@@ -93,7 +102,7 @@
         <button on:click={() => (action = 'add')}><Icon kind="add" /></button>
         {#if depth > 0}
           <button on:click={() => (action = 'rename')}><Icon kind="rename" /></button>
-          <button><Icon kind="linked-copy" /></button>
+          <button on:click={() => actions.copy.linked.add()}><Icon kind="linked-copy" /></button>
           <button><Icon kind="go" /></button>
           <button><Icon kind="delete" /></button>
         {/if}
@@ -126,7 +135,7 @@
           }}
           on:dragend|self={() => dragged.clear()}
         >
-          <svelte:self branch={childBranch} depth={depth + 1} {tree} />
+          <svelte:self parent={branch} branch={childBranch} depth={depth + 1} {tree} />
         </li>
       {/each}
     {/if}
