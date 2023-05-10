@@ -1,15 +1,13 @@
 <script lang="ts">
-  import Dev from './Dev.svelte'
-  import Tree from './Tree.svelte'
-  import type { Relation, Node } from './stores'
-  import { makeTreeStore } from './stores'
+  import { makeTreeStore } from '$lib/components/stores'
+  import Dev from '$lib/components/Dev.svelte'
+  import Tree from '$lib/components/Tree.svelte'
+  import '$lib/components/tree.postcss'
 
   export let data
 
   const tree = makeTreeStore('<root>', data.nodes, data.relations)
   const { undo, redo, undos, redos } = tree.commands
-
-  import './tree.postcss'
 </script>
 
 <div class="grid grid-cols-2">

@@ -1,7 +1,7 @@
 <script lang="ts">
-  import type { TreeStore } from './stores'
+  import type { TreeStore } from '$lib/components/stores'
 
-  import Branch from './Branch.svelte'
+  import Branch from '$lib/components/Branch.svelte'
 
   let className = 'tree'
 

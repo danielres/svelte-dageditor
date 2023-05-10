@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { TreeStore } from './stores'
+  import type { TreeStore } from '$lib/components/stores'
 
   export let tree: TreeStore
 

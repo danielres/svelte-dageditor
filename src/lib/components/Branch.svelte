@@ -1,8 +1,8 @@
 <script lang="ts">
-  import type { Branch, TreeStore } from './stores'
+  import type { Branch, TreeStore } from '$lib/components/stores'
 
+  import Icon from '$lib/components/Icon.svelte'
   import { fade } from 'svelte/transition'
-  import Icon from './Icon.svelte'
 
   export let branch: Branch
 
