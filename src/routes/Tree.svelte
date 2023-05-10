@@ -2,7 +2,6 @@
   import type { TreeStore } from './stores'
 
   import Branch from './Branch.svelte'
-  import './tree.css'
 
   let className = 'tree'
 
