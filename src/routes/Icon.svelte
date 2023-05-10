@@ -1,3 +1,5 @@
+<!-- Credits: Heroicons https://heroicons.com/ -->
+
 <script lang="ts">
   export let kind: 'add' | 'cancel' | 'copy' | 'delete' | 'linked-copy' | 'rename' | 'submit' | 'go'
 </script>
