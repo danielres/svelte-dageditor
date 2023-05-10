@@ -3,7 +3,7 @@
 
   import Branch from '$lib/components/Branch.svelte'
 
-  let className = 'tree'
+  let className = 'danielres-dageditor'
 
   export { className as class }
   export let tree: TreeStore
