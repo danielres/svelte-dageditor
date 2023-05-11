@@ -1,7 +1,29 @@
 {
   "name": "@danielres/svelte-dageditor",
   "version": "0.0.2",
-  "private": true,
+  "private": false,
+  "license": "MIT",
+  "author": {
+    "name": "Daniel Reszka"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/danielres/svelte-dageditor"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "exports": {
+    "./styles.css": "./dist/styles.css",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "svelte": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist/*.*"
+  ],
+  "svelte": "./dist/index.js",
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
@@ -11,7 +33,9 @@
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "test:unit": "ENV=test dotenv vitest -- --threads=false",
     "lint": "prettier --plugin-search-dir . --check . && eslint .",
-    "format": "prettier --plugin-search-dir . --write ."
+    "format": "prettier --plugin-search-dir . --write .",
+    "package:css": "tailwind -i src/lib/components/tree.postcss | postcss > dist/styles.css",
+    "package": "npx @sveltejs/package && pnpm package:css"
   },
   "devDependencies": {
     "@playwright/test": "^1.33.0",
@@ -25,6 +49,7 @@
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-svelte3": "^4.0.0",
     "postcss": "^8.4.23",
+    "postcss-cli": "^10.1.0",
     "postcss-load-config": "^4.0.1",
     "prettier": "^2.8.8",
     "prettier-plugin-svelte": "^2.10.0",
@@ -38,5 +63,7 @@
     "vitest": "^0.25.8"
   },
   "type": "module",
-  "dependencies": {}
+  "dependencies": {
+    "svelte": "^3.59.1"
+  }
 }
