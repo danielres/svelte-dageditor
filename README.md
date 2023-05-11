@@ -1,3 +1,36 @@
+# @danielres/svelte-dageditor
+
+An advanced DAG (directed acyclic graph) editor component for Svelte[Kit].
+
+This is basically a treeview of interconnected nodes, with the ability to add, remove, rename, delete, and move nodes around.
+
+The major difference with a traditional tree structure, is that nodes can have multiple parents.
+
+- No extra dependencies
+- Written in TypeScript
+- Supports Svelte 3 and SvelteKit
+- Supports undo/redo
+- Supports (svelte native) drag and drop
+- Comes with default styles (copy [them](https://github.com/danielres/svelte-dageditor/blob/main/src/lib/components/tree.postcss) to your project and customize them as you wish)
+- 9Kb (unpacked, all included)
+
+## Disclaimer
+
+This is an early alpha version, seems to work well. But it is not yet ready for production use.
+Major breaking changes are expected.
+
+## Installation
+
+`npm install @danielres/svelte-dageditor`
+
+or
+
+`pnpm install @danielres/svelte-dageditor`
+
+or
+
+`yarn add @danielres/svelte-dageditor`
+
 ## Example usage
 
 ```svelte
