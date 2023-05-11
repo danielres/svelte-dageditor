@@ -1,6 +1,6 @@
 {
   "name": "@danielres/svelte-dageditor",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "private": false,
   "license": "MIT",
   "author": {
@@ -21,7 +21,7 @@
     }
   },
   "files": [
-    "dist/*.*"
+    "dist"
   ],
   "svelte": "./dist/index.js",
   "scripts": {
