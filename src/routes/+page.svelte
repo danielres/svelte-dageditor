@@ -6,7 +6,7 @@
 
   export let data
 
-  const tree = makeTreeStore('<root>', [{ name: '<root>', id: '<root>' }], [])
+  const tree = makeTreeStore('<root>', data.nodes, data.relations)
   const { undo, redo, undos, redos } = tree.commands
 </script>
 

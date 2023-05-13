@@ -3,7 +3,7 @@
 
   export let tree: TreeStore
 
-  const { commands, tags, relations } = tree
+  const { commands, nodes, relations } = tree
   const { history } = commands
 </script>
 
@@ -21,8 +21,8 @@
   </section>
 
   <section>
-    <h3>Tags</h3>
-    <pre>{JSON.stringify($tags, null, 2)}</pre>
+    <h3>Nodes</h3>
+    <pre>{JSON.stringify($nodes, null, 2)}</pre>
   </section>
 
   <section>
