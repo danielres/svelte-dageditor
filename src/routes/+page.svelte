@@ -1,13 +1,13 @@
 <script lang="ts">
-  import { makeTreeStore } from '$lib/components/stores'
+  import { makeDagStore } from '$lib/components/stores'
   import Dev from '$lib/components/Dev.svelte'
   import Tree from '$lib/components/Tree.svelte'
   import '$lib/components/tree.postcss'
 
   export let data
 
-  const tree = makeTreeStore('<root>', data.nodes, data.relations)
-  const { undo, redo, undos, redos } = tree.commands
+  const dag = makeDagStore('<root>', data.nodes, data.relations)
+  const { undo, redo, undos, redos } = dag.commands
 </script>
 
 <div class="grid grid-cols-[1fr_2fr]">
@@ -17,11 +17,11 @@
       <button on:click={redo} disabled={!$redos}>Redo</button>
     </div>
 
-    <Tree {tree} root={true} />
+    <Tree {dag} root={true} />
   </main>
 
   <aside class="py-4 px-8 bg-emerald-200 text-emerald-800">
-    <Dev {tree} />
+    <Dev {dag} />
   </aside>
 </div>
 

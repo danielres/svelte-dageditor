@@ -1,14 +1,19 @@
 <script lang="ts">
-  import type { TreeStore } from '$lib/components/stores'
+  import type { DagStore } from '$lib/components/stores'
 
-  export let tree: TreeStore
+  export let dag: DagStore
 
-  const { commands, nodes, relations } = tree
+  const { commands, nodes, relations, dragged } = dag
   const { history } = commands
 </script>
 
 <div class="grid grid-cols-3">
   <section class="grid gap-8 h-fit">
+    <section>
+      <h3>Dragged</h3>
+      <pre>{JSON.stringify($dragged, null, 2)}</pre>
+    </section>
+
     <section>
       <h3>Commands</h3>
       <pre>{JSON.stringify($commands, null, 2)}</pre>

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Branch, TreeStore } from '$lib/components/stores'
+  import type { Branch, DagStore } from '$lib/components/stores'
 
   import Icon from '$lib/components/Icon.svelte'
   import { fade } from 'svelte/transition'
@@ -7,11 +7,11 @@
   export let branch: Branch
 
   export let depth = 0
-  export let tree: TreeStore
+  export let dag: DagStore
   export let parent: Branch | undefined = undefined
   export let root = false
 
-  const { dragged, commands } = tree
+  const { dragged, commands } = dag
   const { ids: draggedIds } = dragged
 
   $: isAllowedDropTarget = !$draggedIds.includes(branch.id)
@@ -79,7 +79,7 @@
     if (branch.children.length && !root) isOpen = !isOpen
   }
 
-  const relations = tree.relations
+  const relations = dag.relations
   $: hasLinkedCopy = $relations.filter((r) => r.childId === branch.id)?.length > 1
 </script>
 
@@ -151,7 +151,7 @@
           }}
           on:dragend|self={() => dragged.clear()}
         >
-          <svelte:self parent={branch} branch={childBranch} depth={depth + 1} {tree} />
+          <svelte:self parent={branch} branch={childBranch} depth={depth + 1} {dag} />
         </li>
       {/each}
     {/if}

@@ -4,7 +4,7 @@ import { isTruthy, onlyUnique } from '$lib/utils/array'
 import { createNodeId, createRelationId } from '$lib/utils/dag'
 import { derived, get, readonly, writable } from 'svelte/store'
 
-export type TreeStore = ReturnType<typeof makeTreeStore>
+export type DagStore = ReturnType<typeof makeDagStore>
 export type Relation = { id: string; parentId: string; childId: string }
 export type Node = { id: string; name: string }
 export type Branch = Node & { children: Branch[] }
@@ -29,7 +29,7 @@ type Config = {
   createRelationId: () => string
 }
 
-export function makeTreeStore(
+export function makeDagStore(
   rootId: string,
   nodes: Node[],
   relations: Relation[],
@@ -48,14 +48,14 @@ export function makeTreeStore(
   const nodesStore = writable<Node[]>(nodes)
   const commandsStore = makeCommandsStore(nodesStore, relationsStore, historyStore)
 
-  const tree = derived([nodesStore, relationsStore], ([$nodes, $relations]) => {
+  const dag = derived([nodesStore, relationsStore], ([$nodes, $relations]) => {
     const root = $nodes.find((t) => t.id === rootId)
     if (!root) throw new Error(`root node ${rootId} not found`)
     return getBranch(root, $nodes, $relations, conf.maxDepth - 1)
   })
 
   return {
-    ...tree,
+    ...dag,
     commands: {
       ...readonly(commandsStore),
       history: readonly(historyStore),
