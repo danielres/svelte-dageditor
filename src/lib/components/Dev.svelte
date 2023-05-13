@@ -8,25 +8,34 @@
 </script>
 
 <div class="grid grid-cols-3">
-  <div class="grid gap-8 h-fit">
-    <div>
+  <section class="grid gap-8 h-fit">
+    <section>
       <h3>Commands</h3>
-      <pre class="text-xs">{JSON.stringify($commands, null, 2)}</pre>
-    </div>
+      <pre>{JSON.stringify($commands, null, 2)}</pre>
+    </section>
 
-    <div>
+    <section>
       <h3>History</h3>
-      <pre class="text-xs">{JSON.stringify($history, null, 2)}</pre>
-    </div>
-  </div>
+      <pre>{JSON.stringify($history, null, 2)}</pre>
+    </section>
+  </section>
 
-  <div>
+  <section>
     <h3>Tags</h3>
-    <pre class="text-xs">{JSON.stringify($tags, null, 2)}</pre>
-  </div>
+    <pre>{JSON.stringify($tags, null, 2)}</pre>
+  </section>
 
-  <div>
+  <section>
     <h3>Relations</h3>
-    <pre class="text-xs">{JSON.stringify($relations, null, 2)}</pre>
-  </div>
+    <pre>{JSON.stringify($relations, null, 2)}</pre>
+  </section>
 </div>
+
+<style lang="postcss">
+  pre {
+    @apply text-xs leading-tight;
+  }
+  section {
+    @apply overflow-x-hidden;
+  }
+</style>

@@ -6,11 +6,11 @@
 
   export let data
 
-  const tree = makeTreeStore('<root>', data.nodes, data.relations)
+  const tree = makeTreeStore('<root>', [{ name: '<root>', id: '<root>' }], [])
   const { undo, redo, undos, redos } = tree.commands
 </script>
 
-<div class="grid grid-cols-2">
+<div class="grid grid-cols-[1fr_2fr]">
   <main class="py-4 px-8 grid gap-8 h-fit">
     <div>
       <button on:click={undo} disabled={!$undos}>Undo</button>
