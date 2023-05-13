@@ -1,7 +1,8 @@
 import type { Writable } from 'svelte/store'
 
 import { isTruthy, onlyUnique } from '$lib/utils/array'
-import { derived, get, writable, readonly } from 'svelte/store'
+import { createNodeId, createRelationId } from '$lib/utils/dag'
+import { derived, get, readonly, writable } from 'svelte/store'
 
 export type TreeStore = ReturnType<typeof makeTreeStore>
 export type Relation = { id: string; parentId: string; childId: string }
@@ -22,7 +23,25 @@ type CommandMove = { kind: 'move'; id: string; from: string; to: string }
 type CommandRemoveLinkedCopy = { kind: 'remove-linked-copy'; id: string; parentId: string }
 type CommandRename = { kind: 'rename'; id: string; from: string; to: string }
 
-export function makeTreeStore(rootId: string, nodes: Node[], relations: Relation[], maxDepth = 10) {
+type Config = {
+  maxDepth: number
+  createNodeId: (nodeName: string) => string
+  createRelationId: () => string
+}
+
+export function makeTreeStore(
+  rootId: string,
+  nodes: Node[],
+  relations: Relation[],
+  config: Partial<Config> = {}
+) {
+  const conf: Config = {
+    maxDepth: 10,
+    createNodeId,
+    createRelationId,
+    ...config,
+  }
+
   const draggedStore = writable<Branch | null>(null)
   const historyStore = writable<Command[]>([])
   const relationsStore = writable<Relation[]>(relations)
@@ -32,7 +51,7 @@ export function makeTreeStore(rootId: string, nodes: Node[], relations: Relation
   const tree = derived([nodesStore, relationsStore], ([$nodes, $relations]) => {
     const root = $nodes.find((t) => t.id === rootId)
     if (!root) throw new Error(`root node ${rootId} not found`)
-    return getBranch(root, $nodes, $relations, maxDepth - 1)
+    return getBranch(root, $nodes, $relations, conf.maxDepth - 1)
   })
 
   return {
@@ -72,7 +91,7 @@ export function makeTreeStore(rootId: string, nodes: Node[], relations: Relation
         commandsStore.add(command).exec()
       },
       insert: (data: { name: string; parentId: string }) => {
-        const command = { kind: 'insert', id: crypto.randomUUID(), ...data } as const
+        const command = { kind: 'insert', id: conf.createNodeId(data.name), ...data } as const
         commandsStore.add(command).exec()
       },
       undo: () => undo(historyStore, commandsStore, relationsStore, nodesStore),
@@ -104,7 +123,11 @@ function exec(
     case 'add-linked-copy':
       relationsStore.update(($relations) => [
         ...$relations,
-        { id: crypto.randomUUID(), parentId: command.parentId, childId: command.id },
+        {
+          id: createRelationId(),
+          parentId: command.parentId,
+          childId: command.id,
+        },
       ])
       break
 
@@ -140,7 +163,11 @@ function exec(
       nodesStore.update(($nodes) => [...$nodes, { id: command.id, name: command.name }])
       relationsStore.update(($relations) => [
         ...$relations,
-        { id: crypto.randomUUID(), parentId: command.parentId, childId: command.id },
+        {
+          id: createRelationId(),
+          parentId: command.parentId,
+          childId: command.id,
+        },
       ])
       break
 
@@ -196,7 +223,7 @@ function undo(
         })
         relationsStore.update(($relations) => [
           ...$relations,
-          { id: crypto.randomUUID(), parentId, childId: node.id },
+          { id: createRelationId(), parentId, childId: node.id },
         ])
       }
       break
@@ -216,7 +243,11 @@ function undo(
     case 'remove-linked-copy':
       relationsStore.update(($relations) => [
         ...$relations,
-        { id: crypto.randomUUID(), parentId: command.parentId, childId: command.id },
+        {
+          id: createRelationId(),
+          parentId: command.parentId,
+          childId: command.id,
+        },
       ])
       break
 
