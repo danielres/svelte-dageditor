@@ -207,7 +207,7 @@ function undo(
   if (!history.length) return
   const command = history[history.length - 1]
   historyStore.update(($history) => $history.slice(0, -1))
-  commandsStore.add(command)
+  commandsStore.prepend(command)
 
   switch (command.kind) {
     case 'delete':
@@ -286,6 +286,10 @@ function makeCommandsStore(
     ...store,
     add(command: Command) {
       this.update(($commands) => [...$commands, command])
+      return this
+    },
+    prepend(command: Command) {
+      this.update(($commands) => [command, ...$commands])
       return this
     },
     exec: () => exec(store, nodesStore, relationsStore, historyStore),
