@@ -1,16 +1,16 @@
 # @danielres/svelte-dageditor
 
-An advanced DAG (directed acyclic graph) editor component for Svelte[Kit].
+An advanced editable DAG (directed acyclic graph) component for Svelte[Kit].
 
-This is basically a treeview of interconnected nodes, with the ability to add, remove, rename, delete, and move nodes around.
+This is basically a treeview of interconnected nodes, with the ability to add, remove, rename, delete, and move nodes around. The major difference with a traditional tree structure, is that nodes can have multiple parents.
 
-The major difference with a traditional tree structure, is that nodes can have multiple parents.
+This allows to create flexible multi-dimensional datastructures/taxonomies/classification systems beyond the limitations of the more common flat or tree-like structures.
 
 - No extra dependencies
 - Written in TypeScript
 - Supports Svelte 3 and SvelteKit
-- Supports undo/redo
-- Supports (svelte native) drag and drop
+- Provides undo/redo
+- Uses (svelte native) drag and drop
 - Comes with default styles (copy [them](https://github.com/danielres/svelte-dageditor/blob/main/src/lib/components/tree.postcss) to your project and customize them as you wish)
 - 9Kb (unpacked, all included)
 
@@ -36,13 +36,15 @@ or
 ```svelte
 <script>
   // import editable DAG tree logic (stores, commands, etc.):
-  import { makeTreeStore } from '@danielres/svelte-dageditor'
+  import { makeDagStore } from '@danielres/svelte-dageditor'
 
   // import the Tree component:
   import { Tree } from '@danielres/svelte-dageditor'
 
   // import default styles:
-  import '@danielres/svelte-dageditor/styles.css'
+  import '@danielres/svelte-dageditor/dist/styles.css'
+
+  import { onMount } from 'svelte'
 
   // Provide nodes and relations (could be fetched from a server / db):
   const data = {
@@ -57,22 +59,29 @@ or
     ],
   }
 
-  // Generate the tree stores
-  // The first argument ("<root>" in this example) should be the id of the node that we wish to use as the root:
-  const tree = makeTreeStore('<root>', data.nodes, data.relations)
+  // Generate the editable tree stores
+  // The first argument ("<root>" in this example) should be the
+  // id of the node that we wish to use as the root:
+  const dag = makeDagStore('<root>', data.nodes, data.relations)
 
-  // Optional: get the commands store (for debugging):
-  const { commands } = tree
+  const { commands } = dag
 
-  // Optional: get the undo/redo actions
-  // Optional: get the undos/redos stores
-  // Optional: get the history store
+  // Optional: use undo/redo features
+  // Optional: get the undos/redos counts
+  // Optional: get the history store containing executed commands
   const { undo, redo, undos, redos, history } = commands
+
+  onMount(() => {
+    // All actions that can be done through the UI are also available programmatically.
+    // Example: execute some commands:
+    commands.rename({ id: 'tag1', to: 'tag1-renamed' })
+    commands.rename({ id: 'tag2', to: 'tag2-renamed' })
+    commands.move({ id: 'tag2', from: '<root>', to: 'tag1' })
+  })
 </script>
 
 <div class="flex justify-between items-center">
   <div class="flex items-center gap-2">
-    <!-- Undo / redo buttons: -->
     <button on:click={undo} disabled={!$undos}>Undo ({$undos})</button>
     <button on:click={redo} disabled={!$redos}>Redo ({$redos})</button>
   </div>
@@ -81,8 +90,8 @@ or
 <div class="grid grid-cols-2">
   <main class="py-4 px-8 grid gap-8 h-fit">
     <!-- The DAG rendered as an editable tree -->
-    <!-- root={true} is for aesthetic purposes, and allows to render the root node differently  -->
-    <Tree {tree} root={true} />
+    <!-- root={true} allows to render the root node differently  -->
+    <Tree {dag} root={true} />
   </main>
 </div>
 
