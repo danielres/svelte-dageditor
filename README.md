@@ -48,7 +48,10 @@ or
 
   import { onMount } from 'svelte'
 
-  // Provide nodes and relations (could be fetched from a server / db):
+  // Provide nodes and relations (could be fetched from a server / db)
+  //   At the minimum you have to provide a root node as follows:
+  //    const data = { nodes: [{ name: '<root>', id: '<root>' }], relations: [] }
+  //   The name and id can be any string
   const data = {
     nodes: [
       { name: '<root>', id: '<root>' },
@@ -56,21 +59,22 @@ or
       { name: 'tag2', id: 'tag2' },
     ],
     relations: [
-      { id: 'aaa', parentId: '<root>', childId: 'tag1' },
-      { id: 'aaa', parentId: '<root>', childId: 'tag2' },
+      { id: 'some-id-string1', parentId: '<root>', childId: 'tag1' },
+      { id: 'some-id-string2', parentId: '<root>', childId: 'tag2' },
     ],
   }
 
-  // Generate the editable tree stores
-  // The first argument ("<root>" in this example) should be the
-  // id of the node that we wish to use as the root:
+  // Generate the editable tree stores.
+  //   The first argument ("<root>" in this example) should be the
+  //   id of a node that we wish to use as the root (top node)
+  //   for the generated tree:
   const dag = makeDagStore('<root>', data.nodes, data.relations)
 
   const { commands } = dag
 
   // Optional: use undo/redo features
   // Optional: get the undos/redos counts
-  // Optional: get the history store containing executed commands
+  // Optional: get the history store (containing previously executed commands)
   const { undo, redo, undos, redos, history } = commands
 
   onMount(() => {
