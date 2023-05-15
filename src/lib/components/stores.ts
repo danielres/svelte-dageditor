@@ -86,8 +86,11 @@ export function makeDagStore(
         const command = { kind: 'move', ...data } as const
         commandsStore.add(command).exec()
       },
-      rename: (data: { id: string; from: string; to: string }) => {
-        const command = { kind: 'rename', ...data } as const
+      rename: (data: { id: string; to: string }) => {
+        const node = get(nodesStore).find((t) => t.id === data.id)
+        if (!node) return
+        const from = node.name
+        const command = { kind: 'rename', from, ...data } as const
         commandsStore.add(command).exec()
       },
       insert: (data: { name: string; parentId: string }) => {

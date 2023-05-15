@@ -56,7 +56,7 @@ describe('undo/redo', () => {
     rename: (dagStore: DagStore) => {
       const node2Id = get(dagStore).children.find((node) => node.name === 'node2')?.id
       if (!node2Id) throw new Error('node2Id not found')
-      dagStore.commands.rename({ id: node2Id, from: 'node2', to: 'node2-renamed' })
+      dagStore.commands.rename({ id: node2Id, to: 'node2-renamed' })
     },
   }
 
