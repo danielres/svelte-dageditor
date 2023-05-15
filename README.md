@@ -4,6 +4,8 @@ An advanced editable DAG (directed acyclic graph) component for Svelte[Kit].
 
 This is basically a treeview of interconnected nodes, with the ability to add, remove, rename, delete, and move nodes around. The major difference with a traditional tree structure, is that nodes can have multiple parents.
 
+- [Preview video (Youtube)](https://www.youtube.com/watch?v=HDXNwqDPwAs)
+
 This allows to create flexible multi-dimensional datastructures/taxonomies/classification systems beyond the limitations of the more common flat or tree-like structures.
 
 - No extra dependencies
